@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,5 +64,27 @@ public class AreaCultivoController {
             return ResponseEntity.ok(null);
         return ResponseEntity.ok(AreaCultivoResponse
                 .AreaCultivoToAreaCultivoResponse(areaCultivo));
+    }
+
+    @GetMapping(path = "/findByPlanProdBetween/{planProd}/{planProd2}")
+    ResponseEntity<List<AreaCultivo>> findAreaCultivoByPlanProdBetween(@PathVariable Long planProd, @PathVariable Long planProd2){
+        return ResponseEntity.ok(areaCultivoService.findAreaCultivoByPlanProdBetween(planProd, planProd2));
+    }
+
+    @GetMapping(path = "/findByProdCultivosPermanenteAfter/{prodCultivosPermanente}")
+    ResponseEntity<List<AreaCultivo>> findAreaCultivoByProdCultivosPermanenteAfter(@PathVariable Double prodCultivosPermanente){
+        return ResponseEntity.ok(areaCultivoService.findAreaCultivoByProdCultivosPermanenteAfter(prodCultivosPermanente));
+    }
+
+    @GetMapping(path = "/findByFechaRecogidaBefore/{fechaRecogida}")
+    ResponseEntity<List<AreaCultivo>> findAreaCultivoByFechaRecogidaBefore(@PathVariable String fechaRecogida){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+        Date date = null;
+        try {
+            date = new Date(formatter.parse(fechaRecogida).getTime());
+        } catch (ParseException e) {
+            date = new Date(System.currentTimeMillis());
+        }
+        return ResponseEntity.ok(areaCultivoService.findAreaCultivoByFechaRecogidaBefore(date));
     }
 }

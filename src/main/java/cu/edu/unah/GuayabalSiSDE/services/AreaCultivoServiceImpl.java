@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -71,5 +72,20 @@ public class AreaCultivoServiceImpl implements AreaCultivoService{
             return null;
         areaCultivoRepository.delete(areaCultivoDb);
         return areaCultivoDb;
+    }
+
+    @Override
+    public List<AreaCultivo> findAreaCultivoByPlanProdBetween(Long planProd, Long planProd2) {
+        return areaCultivoRepository.findAreaCultivoByPlanProdBetween(planProd, planProd2);
+    }
+
+    @Override
+    public List<AreaCultivo> findAreaCultivoByProdCultivosPermanenteAfter(Double prodCultivosPermanente) {
+        return areaCultivoRepository.findAreaCultivoByProdCultivosPermanenteAfter(prodCultivosPermanente);
+    }
+
+    @Override
+    public List<AreaCultivo> findAreaCultivoByFechaRecogidaBefore(Date fechaRecogida) {
+        return areaCultivoRepository.findAreaCultivoByFechaRecogidaBefore(fechaRecogida);
     }
 }
