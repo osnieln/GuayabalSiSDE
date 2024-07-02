@@ -4,6 +4,7 @@ import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.Produccion;
 import cu.edu.unah.GuayabalSiSDE.repository.CultivoRepository;
 import cu.edu.unah.GuayabalSiSDE.repository.ProduccionRepository;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionsBuilder;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class CultivoServiceImpl implements CultivoService{
     @Autowired
     ProduccionRepository produccionRepository;
 
+    String className = "Cultivo";
+
     @Override
     public List<Cultivo> findAll() {
         return cultivoRepository.findAll();
@@ -32,8 +35,10 @@ public class CultivoServiceImpl implements CultivoService{
     @Override
     public List<Cultivo> findByProduccion(Long idProduccion) {
         Produccion produccionDb = produccionRepository.findById(idProduccion).orElse(null);
-        if(null == produccionDb)
+        if(null == produccionDb) {
+            ExceptionsBuilder.launchException(className, "Este cultivo no existe.");
             return null;
+        }
         return cultivoRepository.findCultivoByProduccion(produccionDb);
     }
 

@@ -29,7 +29,10 @@ public class AreaController {
 
     @GetMapping(path = "/findById/{id}")
     public ResponseEntity<AreaResponse> findById(@PathVariable(required = true) Long id){
-        return ResponseEntity.ok(AreaResponse.AreaToAreaResponse(areaService.findByID(id)));
+        Area area = areaService.findByID(id);
+        if(area == null)
+            return ResponseEntity.ok(null);
+        return ResponseEntity.ok(AreaResponse.AreaToAreaResponse(area));
     }
 
     @PostMapping(path = "/create")

@@ -5,6 +5,7 @@ import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
 import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
 import cu.edu.unah.GuayabalSiSDE.repository.AreaCultivoRepository;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionsBuilder;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -27,6 +28,8 @@ public class AreaCultivoServiceImpl implements AreaCultivoService{
     @Lazy
     CultivoService cultivoService;
 
+    String className = "AreaCultivo";
+
     @Override
     public List<AreaCultivo> findAll() {
         return areaCultivoRepository.findAll();
@@ -40,12 +43,16 @@ public class AreaCultivoServiceImpl implements AreaCultivoService{
     @Override
     public AreaCultivo create(@NonNull AreaCultivo areaCultivo) {
         AreaCultivo areaCultivoDb = findById(areaCultivo.getAreaCultivoPk());
-        if(areaCultivoDb!=null)
+        if(areaCultivoDb!=null) {
+            ExceptionsBuilder.launchException(className, "Esta área ya existe.");
             return null;
+        }
         Area areaDb = areaService.findByID(areaCultivo.getAreaCultivoPk().getAreaId());
         Cultivo cultivoDb = cultivoService.findById(areaCultivo.getAreaCultivoPk().getCultivoId());
-        if(null == areaDb || null == cultivoDb)
+        if(null == areaDb || null == cultivoDb) {
+            ExceptionsBuilder.launchException(className, "Esta área no existe.");
             return null;
+        }
         areaCultivo.setCultivo(cultivoDb);
         areaCultivo.setArea(areaDb);
         return areaCultivoRepository.save(areaCultivo);
@@ -54,8 +61,10 @@ public class AreaCultivoServiceImpl implements AreaCultivoService{
     @Override
     public AreaCultivo edit(@NonNull AreaCultivo areaCultivo) {
         AreaCultivo areaCultivoDb = findById(areaCultivo.getAreaCultivoPk());
-        if(areaCultivoDb==null)
+        if(areaCultivoDb==null) {
+            ExceptionsBuilder.launchException(className, "Esta área no existe.");
             return null;
+        }
         areaCultivoDb.setProdCultivosTemporales(areaCultivo.getProdCultivosTemporales());
         areaCultivoDb.setProdCultivosPermanente(areaCultivo.getProdCultivosPermanente());
         areaCultivoDb.setPlanProd(areaCultivo.getPlanProd());
@@ -68,8 +77,10 @@ public class AreaCultivoServiceImpl implements AreaCultivoService{
     @Override
     public AreaCultivo delete(@NonNull AreaCultivoPk areaCultivoPk) {
         AreaCultivo areaCultivoDb = findById(areaCultivoPk);
-        if(areaCultivoDb==null)
+        if(areaCultivoDb==null) {
+            ExceptionsBuilder.launchException(className, "Esta área no existe.");
             return null;
+        }
         areaCultivoRepository.delete(areaCultivoDb);
         return areaCultivoDb;
     }

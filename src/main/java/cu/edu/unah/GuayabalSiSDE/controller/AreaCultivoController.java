@@ -4,6 +4,7 @@ import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
 import cu.edu.unah.GuayabalSiSDE.services.AreaCultivoService;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponse;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionsBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -67,24 +68,45 @@ public class AreaCultivoController {
     }
 
     @GetMapping(path = "/findByPlanProdBetween/{planProd}/{planProd2}")
-    ResponseEntity<List<AreaCultivo>> findAreaCultivoByPlanProdBetween(@PathVariable Long planProd, @PathVariable Long planProd2){
-        return ResponseEntity.ok(areaCultivoService.findAreaCultivoByPlanProdBetween(planProd, planProd2));
+    ResponseEntity<List<AreaCultivoResponse>> findAreaCultivoByPlanProdBetween(@PathVariable Long planProd, @PathVariable Long planProd2){
+        List<AreaCultivo> areaCultivoList = areaCultivoService.findAreaCultivoByPlanProdBetween(planProd, planProd2);
+        if(areaCultivoList.isEmpty())
+            return ResponseEntity.ok(null);
+        List<AreaCultivoResponse> areaCultivoResponseList = new ArrayList<>();
+        areaCultivoList.forEach(areaCultivo -> {
+            areaCultivoResponseList.add(AreaCultivoResponse.AreaCultivoToAreaCultivoResponse(areaCultivo));
+        });
+        return ResponseEntity.ok(areaCultivoResponseList);
     }
 
     @GetMapping(path = "/findByProdCultivosPermanenteAfter/{prodCultivosPermanente}")
-    ResponseEntity<List<AreaCultivo>> findAreaCultivoByProdCultivosPermanenteAfter(@PathVariable Double prodCultivosPermanente){
-        return ResponseEntity.ok(areaCultivoService.findAreaCultivoByProdCultivosPermanenteAfter(prodCultivosPermanente));
+    ResponseEntity<List<AreaCultivoResponse>> findAreaCultivoByProdCultivosPermanenteAfter(@PathVariable Double prodCultivosPermanente){
+        List<AreaCultivo> areaCultivoList = areaCultivoService.findAreaCultivoByProdCultivosPermanenteAfter(prodCultivosPermanente);
+        if(areaCultivoList.isEmpty())
+            return ResponseEntity.ok(null);
+        List<AreaCultivoResponse> areaCultivoResponseList = new ArrayList<>();
+        areaCultivoList.forEach(areaCultivo -> {
+            areaCultivoResponseList.add(AreaCultivoResponse.AreaCultivoToAreaCultivoResponse(areaCultivo));
+        });
+        return ResponseEntity.ok(areaCultivoResponseList);
     }
 
     @GetMapping(path = "/findByFechaRecogidaBefore/{fechaRecogida}")
-    ResponseEntity<List<AreaCultivo>> findAreaCultivoByFechaRecogidaBefore(@PathVariable String fechaRecogida){
+    ResponseEntity<List<AreaCultivoResponse>> findAreaCultivoByFechaRecogidaBefore(@PathVariable String fechaRecogida){
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
         Date date = null;
         try {
             date = new Date(formatter.parse(fechaRecogida).getTime());
         } catch (ParseException e) {
-            date = new Date(System.currentTimeMillis());
+            ExceptionsBuilder.launchException("areaCultivo", "El formato de fecha introducido no es válido. La fecha debe tener este formato dd-MMM-yyyy.");
         }
-        return ResponseEntity.ok(areaCultivoService.findAreaCultivoByFechaRecogidaBefore(date));
+        List<AreaCultivo> areaCultivoList = areaCultivoService.findAreaCultivoByFechaRecogidaBefore(date);
+        if(areaCultivoList.isEmpty())
+            return ResponseEntity.ok(null);
+        List<AreaCultivoResponse> areaCultivoResponseList = new ArrayList<>();
+        areaCultivoList.forEach(areaCultivo -> {
+            areaCultivoResponseList.add(AreaCultivoResponse.AreaCultivoToAreaCultivoResponse(areaCultivo));
+        });
+        return ResponseEntity.ok(areaCultivoResponseList);
     }
 }
