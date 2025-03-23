@@ -44,6 +44,8 @@ public class CultivoServiceImpl implements CultivoService{
 
     @Override
     public Cultivo create(@NonNull Cultivo cultivo) {
+        Produccion produccion = produccionRepository.findById(cultivo.getProduccion().getId()).orElse(null);
+        cultivo.setProduccion(produccion);
         return cultivoRepository.save(cultivo);
     }
 

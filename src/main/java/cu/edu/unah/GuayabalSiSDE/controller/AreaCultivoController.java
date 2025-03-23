@@ -58,7 +58,7 @@ public class AreaCultivoController {
                 .AreaCultivoToAreaCultivoResponse(areaCultivo));
     }
 
-    @DeleteMapping(path = "/delete")
+    @PostMapping(path = "/delete")
     ResponseEntity<AreaCultivoResponse> delete(@RequestBody AreaCultivoPk areaCultivoPk){
         AreaCultivo areaCultivo = areaCultivoService.delete(areaCultivoPk);
         if (areaCultivo == null)
