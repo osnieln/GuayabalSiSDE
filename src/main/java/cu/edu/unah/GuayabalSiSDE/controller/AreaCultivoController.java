@@ -1,11 +1,18 @@
 package cu.edu.unah.GuayabalSiSDE.controller;
 
+import cu.edu.unah.GuayabalSiSDE.entity.Area;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
+import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
 import cu.edu.unah.GuayabalSiSDE.services.AreaCultivoService;
+import cu.edu.unah.GuayabalSiSDE.services.AreaService;
+import cu.edu.unah.GuayabalSiSDE.services.CultivoService;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponse;
+import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponsePK;
+import cu.edu.unah.GuayabalSiSDE.util.DateFormatter;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionsBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +29,14 @@ public class AreaCultivoController {
     @Autowired
     AreaCultivoService areaCultivoService;
 
+    @Autowired
+    @Lazy
+    AreaService areaService;
+
+    @Autowired
+    @Lazy
+    CultivoService cultivoService;
+
     @GetMapping
     ResponseEntity<List<AreaCultivoResponse>> findAll(){
         List<AreaCultivo> areaCultivo = areaCultivoService.findAll();
@@ -33,7 +48,12 @@ public class AreaCultivoController {
     }
 
     @PostMapping(path = "/findById")
-    ResponseEntity<AreaCultivoResponse> findById(@RequestBody AreaCultivoPk areaCultivoPk){
+    ResponseEntity<AreaCultivoResponse> findById(@RequestBody AreaCultivoResponsePK areaCultivoResponsePK){
+        AreaCultivoPk areaCultivoPk = AreaCultivoPk.builder()
+                .areaId(areaCultivoResponsePK.getAreaId())
+                .cultivoId(areaCultivoResponsePK.getCultivoId())
+                .fechaSiembra(DateFormatter.format(areaCultivoResponsePK.getFechaSiembra()))
+                .build();
         AreaCultivo areaCultivo = areaCultivoService.findById(areaCultivoPk);
         if(areaCultivo == null)
             return ResponseEntity.ok(null);
@@ -42,7 +62,9 @@ public class AreaCultivoController {
 
     @PostMapping(path = "/create")
     ResponseEntity<AreaCultivoResponse> create(@RequestBody AreaCultivoResponse areaCultivoResponse){
-        AreaCultivo areaCultivo = areaCultivoService.create(AreaCultivoResponse.AreaCultivoResponseAreaCultivo(areaCultivoResponse));
+        Area area = areaService.findByID(areaCultivoResponse.getAreaCultivoResponsePK().getAreaId());
+        Cultivo cultivo = cultivoService.findById(areaCultivoResponse.getAreaCultivoResponsePK().getCultivoId());
+        AreaCultivo areaCultivo = areaCultivoService.create(AreaCultivoResponse.AreaCultivoResponseAreaCultivo(areaCultivoResponse, area, cultivo));
         if (areaCultivo == null)
             return ResponseEntity.ok(null);
         return ResponseEntity.ok(AreaCultivoResponse
@@ -51,7 +73,9 @@ public class AreaCultivoController {
 
     @PutMapping(path = "/edit")
     ResponseEntity<AreaCultivoResponse> edit(@RequestBody AreaCultivoResponse areaCultivoResponse){
-        AreaCultivo areaCultivo = areaCultivoService.edit(AreaCultivoResponse.AreaCultivoResponseAreaCultivo(areaCultivoResponse));
+        Area area = areaService.findByID(areaCultivoResponse.getAreaCultivoResponsePK().getAreaId());
+        Cultivo cultivo = cultivoService.findById(areaCultivoResponse.getAreaCultivoResponsePK().getCultivoId());
+        AreaCultivo areaCultivo = areaCultivoService.edit(AreaCultivoResponse.AreaCultivoResponseAreaCultivo(areaCultivoResponse, area, cultivo));
         if (areaCultivo == null)
             return ResponseEntity.ok(null);
         return ResponseEntity.ok(AreaCultivoResponse
@@ -59,7 +83,12 @@ public class AreaCultivoController {
     }
 
     @PostMapping(path = "/delete")
-    ResponseEntity<AreaCultivoResponse> delete(@RequestBody AreaCultivoPk areaCultivoPk){
+    ResponseEntity<AreaCultivoResponse> delete(@RequestBody AreaCultivoResponsePK areaCultivoResponsePK){
+        AreaCultivoPk areaCultivoPk = AreaCultivoPk.builder()
+                .areaId(areaCultivoResponsePK.getAreaId())
+                .cultivoId(areaCultivoResponsePK.getCultivoId())
+                .fechaSiembra(DateFormatter.format(areaCultivoResponsePK.getFechaSiembra()))
+                .build();
         AreaCultivo areaCultivo = areaCultivoService.delete(areaCultivoPk);
         if (areaCultivo == null)
             return ResponseEntity.ok(null);

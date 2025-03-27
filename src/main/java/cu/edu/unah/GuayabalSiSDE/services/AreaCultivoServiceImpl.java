@@ -5,6 +5,7 @@ import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
 import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
 import cu.edu.unah.GuayabalSiSDE.repository.AreaCultivoRepository;
+import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponse;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionsBuilder;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class AreaCultivoServiceImpl implements AreaCultivoService{
 
     @Override
     public AreaCultivo findById(@NonNull AreaCultivoPk areaCultivoPk) {
+        areaCultivoPk.setFechaSiembra(new Date(areaCultivoPk.getFechaSiembra().getTime()));
         return areaCultivoRepository.findById(areaCultivoPk).orElse(null);
     }
 

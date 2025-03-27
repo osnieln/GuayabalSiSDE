@@ -4,6 +4,7 @@ import cu.edu.unah.GuayabalSiSDE.entity.Area;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
 import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
+import cu.edu.unah.GuayabalSiSDE.repository.AreaRepository;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -18,40 +19,42 @@ import java.sql.Date;
 @Builder
 public class AreaCultivoResponse implements Serializable {
 
-    AreaCultivoPk areaCultivoPk;
-    Date fechaRecogida;
+    AreaCultivoResponsePK areaCultivoResponsePK;
+    String fechaRecogida;
     Long planProd;
     Double prodCultivosPermanente;
     Double prodCultivosTemporales;
     Double produccionReal;
 
-    private Cultivo cultivo;
-
-    private AreaResponse areaResponse;
-
     public static AreaCultivoResponse AreaCultivoToAreaCultivoResponse(AreaCultivo areaCultivo){
-        return new AreaCultivoResponse(
-                areaCultivo.getAreaCultivoPk(),
-                areaCultivo.getFechaRecogida(),
-                areaCultivo.getPlanProd(),
-                areaCultivo.getProdCultivosPermanente(),
-                areaCultivo.getProdCultivosTemporales(),
-                areaCultivo.getProduccionReal(),
-                areaCultivo.getCultivo() == null ? null : areaCultivo.getCultivo(),
-                areaCultivo.getArea() == null ? null : AreaResponse.AreaToAreaResponse(areaCultivo.getArea())
-                );
+        return AreaCultivoResponse.builder()
+                .areaCultivoResponsePK(AreaCultivoResponsePK.builder()
+                        .areaId(areaCultivo.getAreaCultivoPk().getAreaId())
+                        .cultivoId(areaCultivo.getAreaCultivoPk().getCultivoId())
+                         .fechaSiembra(DateFormatter.format(areaCultivo.getAreaCultivoPk().getFechaSiembra()))
+                        .build())
+                .fechaRecogida(DateFormatter.format(areaCultivo.getFechaRecogida()))
+                .planProd(areaCultivo.getPlanProd())
+                .prodCultivosPermanente(areaCultivo.getProdCultivosPermanente())
+                .prodCultivosTemporales(areaCultivo.getProdCultivosTemporales())
+                .produccionReal(areaCultivo.getProduccionReal())
+                .build();
     }
 
-    public static AreaCultivo AreaCultivoResponseAreaCultivo(AreaCultivoResponse areaCultivoResponse){
+    public static AreaCultivo AreaCultivoResponseAreaCultivo(AreaCultivoResponse areaCultivoResponse, Area area, Cultivo cultivo){
         return AreaCultivo.builder()
-                .areaCultivoPk(areaCultivoResponse.areaCultivoPk)
-                .fechaRecogida(areaCultivoResponse.getFechaRecogida())
+                .areaCultivoPk(AreaCultivoPk.builder()
+                        .areaId(areaCultivoResponse.areaCultivoResponsePK.getAreaId())
+                        .cultivoId(areaCultivoResponse.areaCultivoResponsePK.cultivoId)
+                        .fechaSiembra(DateFormatter.format(areaCultivoResponse.areaCultivoResponsePK.getFechaSiembra()))
+                        .build())
+                .fechaRecogida(DateFormatter.format(areaCultivoResponse.fechaRecogida))
                 .planProd(areaCultivoResponse.getPlanProd())
                 .prodCultivosPermanente(areaCultivoResponse.prodCultivosPermanente)
                 .prodCultivosTemporales(areaCultivoResponse.prodCultivosTemporales)
                 .produccionReal(areaCultivoResponse.getProduccionReal())
-                .cultivo(areaCultivoResponse.cultivo == null ? null : areaCultivoResponse.cultivo)
-                .area(areaCultivoResponse.areaResponse == null ? null : AreaResponse.AreaResponseToArea(areaCultivoResponse.areaResponse))
+                .cultivo(cultivo)
+                .area(area)
                 .build();
     }
 }

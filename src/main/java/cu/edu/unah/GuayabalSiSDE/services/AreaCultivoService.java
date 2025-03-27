@@ -2,6 +2,7 @@ package cu.edu.unah.GuayabalSiSDE.services;
 
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
+import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponse;
 
 import java.sql.Date;
 import java.util.List;
