@@ -1,14 +1,13 @@
 package cu.edu.unah.GuayabalSiSDE.entity;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -36,4 +35,17 @@ public class AreaCultivo implements Serializable {
     @JoinColumn(name = "areaId", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Area area;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "area_cultivo_agroquimico",
+            joinColumns = {
+                    @JoinColumn(name = "area_cultivo_areaid", referencedColumnName = "areaId"),
+                    @JoinColumn(name = "area_cultivo_cultivoid", referencedColumnName = "cultivoId"),
+                    @JoinColumn(name = "area_cultivo_fecha_siembra", referencedColumnName = "fechaSiembra")
+            },
+            inverseJoinColumns = @JoinColumn(name = "agroquimicoid")
+    )
+    @Builder.Default
+    private Set<Agroquimico> agroquimicos = new HashSet<>();
 }

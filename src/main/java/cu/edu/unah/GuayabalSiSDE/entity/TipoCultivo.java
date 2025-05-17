@@ -11,19 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Cultivo {
+public class TipoCultivo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    String descripcion;
-
-    @ManyToOne (cascade = CascadeType.ALL)
-    @JoinColumn(name = "produccionid")
-    Produccion produccion;
-
-    @ManyToOne (cascade = CascadeType.ALL)
-    @JoinColumn(name = "tipoCultivoid")
-    TipoCultivo tipoCultivo;
+    String nombre;
 }
