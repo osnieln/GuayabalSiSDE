@@ -2,12 +2,11 @@ package cu.edu.unah.GuayabalSiSDE.services;
 
 import cu.edu.unah.GuayabalSiSDE.entity.Area;
 import cu.edu.unah.GuayabalSiSDE.repository.AreaRepository;
-import cu.edu.unah.GuayabalSiSDE.util.ExceptionsBuilder;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
@@ -38,8 +37,7 @@ public class AreaServiceImpl implements AreaService{
     public Area editArea(@NonNull Area area) {
         Area areaDb = findByID(area.getId());
         if(null == areaDb){
-            ExceptionsBuilder.launchException(className, "Esta área no existe.");
-            return null;
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "Esta área no existe.");
         }
         areaDb.setDescripcion(area.getDescripcion());
         areaDb.setUbicacion(area.getUbicacion());
@@ -50,8 +48,7 @@ public class AreaServiceImpl implements AreaService{
     public Area deleteArea(Long id) {
         Area areaDb = findByID(id);
         if(null == areaDb){
-            ExceptionsBuilder.launchException(className, "Esta área no existe.");
-            return null;
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "Esta área no existe.");
         }
         areaRepository.delete(areaDb);
         return areaDb;

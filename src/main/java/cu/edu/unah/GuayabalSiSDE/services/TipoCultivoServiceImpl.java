@@ -5,6 +5,7 @@ import cu.edu.unah.GuayabalSiSDE.entity.TipoCultivo;
 import cu.edu.unah.GuayabalSiSDE.repository.TipoCultivoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class TipoCultivoServiceImpl implements TipoCultivoService {
 
     @Override
     public List<TipoCultivo> findAll() {
-        return tipoCultivoRepository.findAll();
+        return tipoCultivoRepository.findAll(Sort.by("id"));
     }
 
     @Override
@@ -42,7 +43,7 @@ public class TipoCultivoServiceImpl implements TipoCultivoService {
 
     @Override
     public TipoCultivo edit(TipoCultivo tipoCultivo) {
-        TipoCultivo tipoCultivoDb = findByNombre(tipoCultivo.getNombre());
+        TipoCultivo tipoCultivoDb = findById(tipoCultivo.getId());
         if (tipoCultivoDb == null)
             return null;
         tipoCultivoDb.setNombre(tipoCultivo.getNombre());

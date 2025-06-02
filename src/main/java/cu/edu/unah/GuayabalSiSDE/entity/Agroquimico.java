@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,9 +22,10 @@ public class Agroquimico implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String nombre;
 
     // Relación ManyToMany con AreaCultivo
     @ManyToMany(mappedBy = "agroquimicos", fetch = FetchType.LAZY)
-    private Set<AreaCultivo> areaCultivos;
+    private List<AreaCultivo> areaCultivos;
 }

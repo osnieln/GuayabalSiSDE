@@ -4,14 +4,9 @@ import cu.edu.unah.GuayabalSiSDE.entity.Area;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
 import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
-import cu.edu.unah.GuayabalSiSDE.repository.AreaRepository;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.io.Serializable;
-import java.sql.Date;
 
 @Data
 @AllArgsConstructor
@@ -26,7 +21,7 @@ public class AreaCultivoResponse implements Serializable {
     Double prodCultivosTemporales;
     Double produccionReal;
 
-    public static AreaCultivoResponse AreaCultivoToAreaCultivoResponse(AreaCultivo areaCultivo){
+    public static AreaCultivoResponse map(AreaCultivo areaCultivo){
         return AreaCultivoResponse.builder()
                 .areaCultivoResponsePK(AreaCultivoResponsePK.builder()
                         .areaId(areaCultivo.getAreaCultivoPk().getAreaId())
@@ -41,7 +36,7 @@ public class AreaCultivoResponse implements Serializable {
                 .build();
     }
 
-    public static AreaCultivo AreaCultivoResponseAreaCultivo(AreaCultivoResponse areaCultivoResponse, Area area, Cultivo cultivo){
+    public static AreaCultivo map(AreaCultivoResponse areaCultivoResponse, Area area, Cultivo cultivo){
         return AreaCultivo.builder()
                 .areaCultivoPk(AreaCultivoPk.builder()
                         .areaId(areaCultivoResponse.areaCultivoResponsePK.getAreaId())

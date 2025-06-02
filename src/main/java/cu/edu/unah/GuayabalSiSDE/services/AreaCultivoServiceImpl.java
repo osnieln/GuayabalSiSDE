@@ -6,7 +6,8 @@ import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
 import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
 import cu.edu.unah.GuayabalSiSDE.repository.AreaCultivoRepository;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponse;
-import cu.edu.unah.GuayabalSiSDE.util.ExceptionsBuilder;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -46,14 +47,12 @@ public class AreaCultivoServiceImpl implements AreaCultivoService{
     public AreaCultivo create(@NonNull AreaCultivo areaCultivo) {
         AreaCultivo areaCultivoDb = findById(areaCultivo.getAreaCultivoPk());
         if(areaCultivoDb!=null) {
-            ExceptionsBuilder.launchException(className, "Esta área ya existe.");
-            return null;
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "Esta área ya existe.");
         }
         Area areaDb = areaService.findByID(areaCultivo.getAreaCultivoPk().getAreaId());
         Cultivo cultivoDb = cultivoService.findById(areaCultivo.getAreaCultivoPk().getCultivoId());
         if(null == areaDb || null == cultivoDb) {
-            ExceptionsBuilder.launchException(className, "Esta área no existe.");
-            return null;
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "Esta área no existe.");
         }
         areaCultivo.setCultivo(cultivoDb);
         areaCultivo.setArea(areaDb);
@@ -64,8 +63,7 @@ public class AreaCultivoServiceImpl implements AreaCultivoService{
     public AreaCultivo edit(@NonNull AreaCultivo areaCultivo) {
         AreaCultivo areaCultivoDb = findById(areaCultivo.getAreaCultivoPk());
         if(areaCultivoDb==null) {
-            ExceptionsBuilder.launchException(className, "Esta área no existe.");
-            return null;
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "Esta área no existe.");
         }
         areaCultivoDb.setProdCultivosTemporales(areaCultivo.getProdCultivosTemporales());
         areaCultivoDb.setProdCultivosPermanente(areaCultivo.getProdCultivosPermanente());
@@ -80,8 +78,7 @@ public class AreaCultivoServiceImpl implements AreaCultivoService{
     public AreaCultivo delete(@NonNull AreaCultivoPk areaCultivoPk) {
         AreaCultivo areaCultivoDb = findById(areaCultivoPk);
         if(areaCultivoDb==null) {
-            ExceptionsBuilder.launchException(className, "Esta área no existe.");
-            return null;
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "Esta área no existe.");
         }
         areaCultivoRepository.delete(areaCultivoDb);
         return areaCultivoDb;

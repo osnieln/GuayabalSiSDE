@@ -4,7 +4,8 @@ import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.Produccion;
 import cu.edu.unah.GuayabalSiSDE.repository.CultivoRepository;
 import cu.edu.unah.GuayabalSiSDE.repository.ProduccionRepository;
-import cu.edu.unah.GuayabalSiSDE.util.ExceptionsBuilder;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,8 +37,7 @@ public class CultivoServiceImpl implements CultivoService{
     public List<Cultivo> findByProduccion(Long idProduccion) {
         Produccion produccionDb = produccionRepository.findById(idProduccion).orElse(null);
         if(null == produccionDb) {
-            ExceptionsBuilder.launchException(className, "Este cultivo no existe.");
-            return null;
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "Este cultivo no existe.");
         }
         return cultivoRepository.findCultivoByProduccion(produccionDb);
     }

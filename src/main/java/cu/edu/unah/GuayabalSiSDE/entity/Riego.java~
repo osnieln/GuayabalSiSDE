@@ -27,9 +27,9 @@ public class Riego implements Serializable {
     // Relación ManyToOne con AreaCultivo (que tiene clave embebida)
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "area_cultivo_areaid", referencedColumnName = "areaId"),
-            @JoinColumn(name = "area_cultivo_cultivoid", referencedColumnName = "cultivoId"),
-            @JoinColumn(name = "area_cultivo_fecha_siembra", referencedColumnName = "fechaSiembra")
+            @JoinColumn(name = "area_cultivo_areaid", referencedColumnName = "areaId", insertable = false, updatable = false),
+            @JoinColumn(name = "area_cultivo_cultivoid", referencedColumnName = "cultivoId", insertable = false, updatable = false),
+            @JoinColumn(name = "area_cultivo_fecha_siembra", referencedColumnName = "fechaSiembra", insertable = false, updatable = false)
     })
     private AreaCultivo areaCultivo;
 }

@@ -6,7 +6,9 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -46,6 +48,5 @@ public class AreaCultivo implements Serializable {
             },
             inverseJoinColumns = @JoinColumn(name = "agroquimicoid")
     )
-    @Builder.Default
-    private Set<Agroquimico> agroquimicos = new HashSet<>();
+    private List<Agroquimico> agroquimicos;
 }

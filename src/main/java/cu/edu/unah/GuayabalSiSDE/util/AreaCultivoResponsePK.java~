@@ -15,7 +15,7 @@ public class AreaCultivoResponsePK {
     Long cultivoId;
     String fechaSiembra;
 
-    public static AreaCultivoResponsePK map (AreaCultivoPk areaCultivoPk){
+    AreaCultivoResponsePK map (AreaCultivoPk areaCultivoPk){
         return AreaCultivoResponsePK.builder()
                 .areaId(areaCultivoPk.getAreaId())
                 .cultivoId(areaCultivoPk.getCultivoId())
@@ -23,11 +23,5 @@ public class AreaCultivoResponsePK {
                 .build();
     }
 
-    public static AreaCultivoPk map (AreaCultivoResponsePK areaCultivoResponsePK){
-        return AreaCultivoPk.builder()
-                .areaId(areaCultivoResponsePK.areaId)
-                .cultivoId(areaCultivoResponsePK.cultivoId)
-                .fechaSiembra(DateFormatter.format(areaCultivoResponsePK.fechaSiembra))
-                .build();
-    }
+    AreaCultivo
 }

@@ -10,7 +10,8 @@ import cu.edu.unah.GuayabalSiSDE.services.CultivoService;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponse;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponsePK;
 import cu.edu.unah.GuayabalSiSDE.util.DateFormatter;
-import cu.edu.unah.GuayabalSiSDE.util.ExceptionsBuilder;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class AreaCultivoController {
         List<AreaCultivo> areaCultivo = areaCultivoService.findAll();
         List<AreaCultivoResponse> areaCultivoResponseList = new ArrayList<>();
         for (AreaCultivo cultivo : areaCultivo) {
-            areaCultivoResponseList.add(AreaCultivoResponse.AreaCultivoToAreaCultivoResponse(cultivo));
+            areaCultivoResponseList.add(AreaCultivoResponse.map(cultivo));
         }
         return ResponseEntity.ok(areaCultivoResponseList);
     }
@@ -57,29 +58,29 @@ public class AreaCultivoController {
         AreaCultivo areaCultivo = areaCultivoService.findById(areaCultivoPk);
         if(areaCultivo == null)
             return ResponseEntity.ok(null);
-        return ResponseEntity.ok(AreaCultivoResponse.AreaCultivoToAreaCultivoResponse(areaCultivo));
+        return ResponseEntity.ok(AreaCultivoResponse.map(areaCultivo));
     }
 
     @PostMapping(path = "/create")
     ResponseEntity<AreaCultivoResponse> create(@RequestBody AreaCultivoResponse areaCultivoResponse){
         Area area = areaService.findByID(areaCultivoResponse.getAreaCultivoResponsePK().getAreaId());
         Cultivo cultivo = cultivoService.findById(areaCultivoResponse.getAreaCultivoResponsePK().getCultivoId());
-        AreaCultivo areaCultivo = areaCultivoService.create(AreaCultivoResponse.AreaCultivoResponseAreaCultivo(areaCultivoResponse, area, cultivo));
+        AreaCultivo areaCultivo = areaCultivoService.create(AreaCultivoResponse.map(areaCultivoResponse, area, cultivo));
         if (areaCultivo == null)
             return ResponseEntity.ok(null);
         return ResponseEntity.ok(AreaCultivoResponse
-                .AreaCultivoToAreaCultivoResponse(areaCultivo));
+                .map(areaCultivo));
     }
 
     @PutMapping(path = "/edit")
     ResponseEntity<AreaCultivoResponse> edit(@RequestBody AreaCultivoResponse areaCultivoResponse){
         Area area = areaService.findByID(areaCultivoResponse.getAreaCultivoResponsePK().getAreaId());
         Cultivo cultivo = cultivoService.findById(areaCultivoResponse.getAreaCultivoResponsePK().getCultivoId());
-        AreaCultivo areaCultivo = areaCultivoService.edit(AreaCultivoResponse.AreaCultivoResponseAreaCultivo(areaCultivoResponse, area, cultivo));
+        AreaCultivo areaCultivo = areaCultivoService.edit(AreaCultivoResponse.map(areaCultivoResponse, area, cultivo));
         if (areaCultivo == null)
             return ResponseEntity.ok(null);
         return ResponseEntity.ok(AreaCultivoResponse
-                .AreaCultivoToAreaCultivoResponse(areaCultivo));
+                .map(areaCultivo));
     }
 
     @PostMapping(path = "/delete")
@@ -93,7 +94,7 @@ public class AreaCultivoController {
         if (areaCultivo == null)
             return ResponseEntity.ok(null);
         return ResponseEntity.ok(AreaCultivoResponse
-                .AreaCultivoToAreaCultivoResponse(areaCultivo));
+                .map(areaCultivo));
     }
 
     @GetMapping(path = "/findByPlanProdBetween/{planProd}/{planProd2}")
@@ -103,7 +104,7 @@ public class AreaCultivoController {
             return ResponseEntity.ok(null);
         List<AreaCultivoResponse> areaCultivoResponseList = new ArrayList<>();
         areaCultivoList.forEach(areaCultivo -> {
-            areaCultivoResponseList.add(AreaCultivoResponse.AreaCultivoToAreaCultivoResponse(areaCultivo));
+            areaCultivoResponseList.add(AreaCultivoResponse.map(areaCultivo));
         });
         return ResponseEntity.ok(areaCultivoResponseList);
     }
@@ -115,7 +116,7 @@ public class AreaCultivoController {
             return ResponseEntity.ok(null);
         List<AreaCultivoResponse> areaCultivoResponseList = new ArrayList<>();
         areaCultivoList.forEach(areaCultivo -> {
-            areaCultivoResponseList.add(AreaCultivoResponse.AreaCultivoToAreaCultivoResponse(areaCultivo));
+            areaCultivoResponseList.add(AreaCultivoResponse.map(areaCultivo));
         });
         return ResponseEntity.ok(areaCultivoResponseList);
     }
@@ -127,14 +128,14 @@ public class AreaCultivoController {
         try {
             date = new Date(formatter.parse(fechaRecogida).getTime());
         } catch (ParseException e) {
-            ExceptionsBuilder.launchException("areaCultivo", "El formato de fecha introducido no es válido. La fecha debe tener este formato dd-MMM-yyyy.");
+            throw new BusinessValidationException(ErrorCodes.INVALID_DATE_FORMAT, "El formato de fecha introducido no es válido. La fecha debe tener este formato dd-MMM-yyyy.");
         }
         List<AreaCultivo> areaCultivoList = areaCultivoService.findAreaCultivoByFechaRecogidaBefore(date);
         if(areaCultivoList.isEmpty())
             return ResponseEntity.ok(null);
         List<AreaCultivoResponse> areaCultivoResponseList = new ArrayList<>();
         areaCultivoList.forEach(areaCultivo -> {
-            areaCultivoResponseList.add(AreaCultivoResponse.AreaCultivoToAreaCultivoResponse(areaCultivo));
+            areaCultivoResponseList.add(AreaCultivoResponse.map(areaCultivo));
         });
         return ResponseEntity.ok(areaCultivoResponseList);
     }
