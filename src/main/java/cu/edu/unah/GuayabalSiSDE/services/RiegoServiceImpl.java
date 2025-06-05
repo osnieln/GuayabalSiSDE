@@ -1,6 +1,7 @@
 package cu.edu.unah.GuayabalSiSDE.services;
 
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
+import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
 import cu.edu.unah.GuayabalSiSDE.entity.Riego;
 import cu.edu.unah.GuayabalSiSDE.repository.RiegoRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,11 @@ public class RiegoServiceImpl implements RiegoService {
     @Override
     public Riego findById(long id) {
         return riegoRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Riego> findByAreaCultivoPk(AreaCultivoPk areaCultivoPk) {
+        return riegoRepository.findRiegoByAreaCultivo_AreaCultivoPk(areaCultivoPk);
     }
 
     @Override

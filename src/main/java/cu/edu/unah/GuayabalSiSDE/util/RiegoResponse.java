@@ -1,8 +1,6 @@
 package cu.edu.unah.GuayabalSiSDE.util;
 
-import cu.edu.unah.GuayabalSiSDE.entity.Area;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
-import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.Riego;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

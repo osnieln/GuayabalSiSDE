@@ -2,8 +2,10 @@ package cu.edu.unah.GuayabalSiSDE.services;
 
 import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.Produccion;
+import cu.edu.unah.GuayabalSiSDE.entity.TipoCultivo;
 import cu.edu.unah.GuayabalSiSDE.repository.CultivoRepository;
 import cu.edu.unah.GuayabalSiSDE.repository.ProduccionRepository;
+import cu.edu.unah.GuayabalSiSDE.repository.TipoCultivoRepository;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
 import lombok.NonNull;
@@ -20,6 +22,9 @@ public class CultivoServiceImpl implements CultivoService{
 
     @Autowired
     ProduccionRepository produccionRepository;
+
+    @Autowired
+    TipoCultivoRepository tipoCultivoRepository;
 
     String className = "Cultivo";
 
@@ -44,8 +49,14 @@ public class CultivoServiceImpl implements CultivoService{
 
     @Override
     public Cultivo create(@NonNull Cultivo cultivo) {
-        Produccion produccion = produccionRepository.findById(cultivo.getProduccion().getId()).orElse(null);
-        cultivo.setProduccion(produccion);
+        Produccion produccionDb = produccionRepository.findById(cultivo.getProduccion().getId()).orElse(null);
+        if(null == cultivo.getProduccion())
+            return null;
+        TipoCultivo tipoCultivoDb = tipoCultivoRepository.findById(cultivo.getTipoCultivo().getId()).orElse(null);
+        if(null == cultivo.getTipoCultivo())
+            return null;
+        cultivo.setProduccion(produccionDb);
+        cultivo.setTipoCultivo(tipoCultivoDb);
         return cultivoRepository.save(cultivo);
     }
 
@@ -60,7 +71,9 @@ public class CultivoServiceImpl implements CultivoService{
         Produccion produccionDb = produccionRepository.findById(cultivo.getProduccion().getId()).orElse(null);
         if(produccionDb==null)
             return null;
+        TipoCultivo tipoCultivoDb = tipoCultivoRepository.findById(cultivo.getTipoCultivo().getId()).orElse(null);
         cultivoDb.setProduccion(produccionDb);
+        cultivoDb.setTipoCultivo(tipoCultivoDb);
         return cultivoRepository.save(cultivoDb);
     }
 

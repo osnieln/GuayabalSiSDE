@@ -57,6 +57,17 @@ public class RiegoController {
         );
     }
 
+    @PostMapping(path = "/findByAreaCultivoPk")
+    public ResponseEntity<List<RiegoResponse>> findByAreaCultivo(@RequestBody AreaCultivoResponsePK areaCultivoResponsePK) {
+        AreaCultivoPk areaCultivoPk = AreaCultivoPk.builder()
+                .areaId(areaCultivoResponsePK.getAreaId())
+                .cultivoId(areaCultivoResponsePK.getCultivoId())
+                .fechaSiembra(DateFormatter.format(areaCultivoResponsePK.getFechaSiembra()))
+                .build();
+        List<Riego> riegoList = riegoService.findByAreaCultivoPk(areaCultivoPk);
+        return ResponseEntity.ok(riegoList.stream().map(RiegoResponse :: map).toList());
+    }
+
     @PutMapping(path = "/edit")
     public ResponseEntity<RiegoResponse> edit(@RequestBody RiegoResponse riegoResponse) {
         AreaCultivo areaCultivoDb = areaCultivoService.findById(AreaCultivoResponsePK.map(riegoResponse.getAreaCultivoResponsePk()));
