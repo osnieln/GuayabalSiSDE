@@ -36,6 +36,12 @@ public class AgroquimicoServiceImpl implements AgroquimicoService {
 
     @Override
     @Transactional
+    public Agroquimico findByNombre(String nombre) {
+        return agroquimicoRepository.findByNombre(nombre);
+    }
+
+    @Override
+    @Transactional
     public Agroquimico create(Agroquimico agroquimico) {
         // Verificar si ya existe un agroquímico con el mismo nombre
         Agroquimico agroquimicoDb = agroquimicoRepository.findByNombre(agroquimico.getNombre());

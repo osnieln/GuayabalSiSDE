@@ -10,6 +10,8 @@ public interface AgroquimicoService {
 
     Agroquimico findById(long id);
 
+    Agroquimico findByNombre(String nombre);
+
     Agroquimico create(Agroquimico agroquimico);
 
     Agroquimico edit(Agroquimico agroquimico);

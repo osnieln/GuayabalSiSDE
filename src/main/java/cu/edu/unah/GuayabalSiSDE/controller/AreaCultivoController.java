@@ -1,9 +1,7 @@
 package cu.edu.unah.GuayabalSiSDE.controller;
 
-import cu.edu.unah.GuayabalSiSDE.entity.Area;
-import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
-import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
-import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
+import cu.edu.unah.GuayabalSiSDE.entity.*;
+import cu.edu.unah.GuayabalSiSDE.services.AgroquimicoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaCultivoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaService;
 import cu.edu.unah.GuayabalSiSDE.services.CultivoService;
@@ -38,6 +36,10 @@ public class AreaCultivoController {
     @Lazy
     CultivoService cultivoService;
 
+    @Autowired
+    @Lazy
+    AgroquimicoService agroquimicoService;
+
     @GetMapping
     ResponseEntity<List<AreaCultivoResponse>> findAll(){
         List<AreaCultivo> areaCultivo = areaCultivoService.findAll();
@@ -65,7 +67,13 @@ public class AreaCultivoController {
     ResponseEntity<AreaCultivoResponse> create(@RequestBody AreaCultivoResponse areaCultivoResponse){
         Area area = areaService.findByID(areaCultivoResponse.getAreaCultivoResponsePK().getAreaId());
         Cultivo cultivo = cultivoService.findById(areaCultivoResponse.getAreaCultivoResponsePK().getCultivoId());
-        AreaCultivo areaCultivo = areaCultivoService.create(AreaCultivoResponse.map(areaCultivoResponse, area, cultivo));
+        List<Agroquimico> agroquimicoList = new ArrayList<>();
+        areaCultivoResponse.getAgroquimicos().forEach(agroquimico -> {
+            Agroquimico agroquimicoDb = agroquimicoService.findByNombre(agroquimico);
+            if(null != agroquimicoDb)
+                agroquimicoList.add(agroquimicoDb);
+        });
+        AreaCultivo areaCultivo = areaCultivoService.create(AreaCultivoResponse.map(areaCultivoResponse, area, cultivo, agroquimicoList));
         if (areaCultivo == null)
             return ResponseEntity.ok(null);
         return ResponseEntity.ok(AreaCultivoResponse
@@ -76,7 +84,13 @@ public class AreaCultivoController {
     ResponseEntity<AreaCultivoResponse> edit(@RequestBody AreaCultivoResponse areaCultivoResponse){
         Area area = areaService.findByID(areaCultivoResponse.getAreaCultivoResponsePK().getAreaId());
         Cultivo cultivo = cultivoService.findById(areaCultivoResponse.getAreaCultivoResponsePK().getCultivoId());
-        AreaCultivo areaCultivo = areaCultivoService.edit(AreaCultivoResponse.map(areaCultivoResponse, area, cultivo));
+        List<Agroquimico> agroquimicoList = new ArrayList<>();
+        areaCultivoResponse.getAgroquimicos().forEach(agroquimico -> {
+            Agroquimico agroquimicoDb = agroquimicoService.findByNombre(agroquimico);
+            if(null != agroquimicoDb)
+                agroquimicoList.add(agroquimicoDb);
+        });
+        AreaCultivo areaCultivo = areaCultivoService.edit(AreaCultivoResponse.map(areaCultivoResponse, area, cultivo, agroquimicoList));
         if (areaCultivo == null)
             return ResponseEntity.ok(null);
         return ResponseEntity.ok(AreaCultivoResponse
