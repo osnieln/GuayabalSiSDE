@@ -53,4 +53,9 @@ public class AreaServiceImpl implements AreaService{
         areaRepository.delete(areaDb);
         return areaDb;
     }
+
+    @Override
+    public List<String> findDistinctCapa() {
+        return areaRepository.findDistinctCapa();
+    }
 }

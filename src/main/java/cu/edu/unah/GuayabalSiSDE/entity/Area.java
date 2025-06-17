@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.checkerframework.common.aliasing.qual.Unique;
 import org.locationtech.jts.geom.Polygon;
 
 import java.io.Serializable;
@@ -20,7 +21,10 @@ public class Area implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column(unique = true)
     String descripcion;
+
+    String capa;
 
     @Column(columnDefinition = "geometry")
     Polygon ubicacion;

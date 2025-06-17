@@ -64,5 +64,9 @@ public class AreaController {
         );
     }
 
+    @GetMapping(path = "/findDistinctCapa")
+    public List<String> findDistinctCapa(){
+        return areaService.findDistinctCapa();
+    }
 
 }
