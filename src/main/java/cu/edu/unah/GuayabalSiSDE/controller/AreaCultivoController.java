@@ -7,6 +7,7 @@ import cu.edu.unah.GuayabalSiSDE.services.AreaService;
 import cu.edu.unah.GuayabalSiSDE.services.CultivoService;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponse;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponsePK;
+import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponseReport;
 import cu.edu.unah.GuayabalSiSDE.util.DateFormatter;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
@@ -112,44 +113,44 @@ public class AreaCultivoController {
     }
 
     @GetMapping(path = "/findByPlanProdBetween/{planProd}/{planProd2}")
-    ResponseEntity<List<AreaCultivoResponse>> findAreaCultivoByPlanProdBetween(@PathVariable Long planProd, @PathVariable Long planProd2){
+    public ResponseEntity<List<AreaCultivoResponseReport>> findAreaCultivoByPlanProdBetween(@PathVariable Long planProd, @PathVariable Long planProd2){
         List<AreaCultivo> areaCultivoList = areaCultivoService.findAreaCultivoByPlanProdBetween(planProd, planProd2);
         if(areaCultivoList.isEmpty())
-            return ResponseEntity.ok(null);
-        List<AreaCultivoResponse> areaCultivoResponseList = new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
+        List<AreaCultivoResponseReport> areaCultivoResponseList = new ArrayList<>();
         areaCultivoList.forEach(areaCultivo -> {
-            areaCultivoResponseList.add(AreaCultivoResponse.map(areaCultivo));
+            areaCultivoResponseList.add(AreaCultivoResponseReport.map(areaCultivo));
         });
         return ResponseEntity.ok(areaCultivoResponseList);
     }
 
     @GetMapping(path = "/findByProdCultivosPermanenteAfter/{prodCultivosPermanente}")
-    ResponseEntity<List<AreaCultivoResponse>> findAreaCultivoByProdCultivosPermanenteAfter(@PathVariable Double prodCultivosPermanente){
+    public ResponseEntity<List<AreaCultivoResponseReport>> findAreaCultivoByProdCultivosPermanenteAfter(@PathVariable Double prodCultivosPermanente){
         List<AreaCultivo> areaCultivoList = areaCultivoService.findAreaCultivoByProdCultivosPermanenteAfter(prodCultivosPermanente);
         if(areaCultivoList.isEmpty())
-            return ResponseEntity.ok(null);
-        List<AreaCultivoResponse> areaCultivoResponseList = new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
+        List<AreaCultivoResponseReport> areaCultivoResponseList = new ArrayList<>();
         areaCultivoList.forEach(areaCultivo -> {
-            areaCultivoResponseList.add(AreaCultivoResponse.map(areaCultivo));
+            areaCultivoResponseList.add(AreaCultivoResponseReport.map(areaCultivo));
         });
         return ResponseEntity.ok(areaCultivoResponseList);
     }
 
     @GetMapping(path = "/findByFechaRecogidaBefore/{fechaRecogida}")
-    ResponseEntity<List<AreaCultivoResponse>> findAreaCultivoByFechaRecogidaBefore(@PathVariable String fechaRecogida){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+    public ResponseEntity<List<AreaCultivoResponseReport>> findAreaCultivoByFechaRecogidaBefore(@PathVariable String fechaRecogida){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         Date date = null;
         try {
             date = new Date(formatter.parse(fechaRecogida).getTime());
         } catch (ParseException e) {
-            throw new BusinessValidationException(ErrorCodes.INVALID_DATE_FORMAT, "El formato de fecha introducido no es válido. La fecha debe tener este formato dd-MMM-yyyy.");
+            throw new BusinessValidationException(ErrorCodes.INVALID_DATE_FORMAT, "El formato de fecha introducido no es válido. La fecha debe tener este formato dd-MM-yyyy.");
         }
         List<AreaCultivo> areaCultivoList = areaCultivoService.findAreaCultivoByFechaRecogidaBefore(date);
         if(areaCultivoList.isEmpty())
-            return ResponseEntity.ok(null);
-        List<AreaCultivoResponse> areaCultivoResponseList = new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
+        List<AreaCultivoResponseReport> areaCultivoResponseList = new ArrayList<>();
         areaCultivoList.forEach(areaCultivo -> {
-            areaCultivoResponseList.add(AreaCultivoResponse.map(areaCultivo));
+            areaCultivoResponseList.add(AreaCultivoResponseReport.map(areaCultivo));
         });
         return ResponseEntity.ok(areaCultivoResponseList);
     }
