@@ -198,16 +198,7 @@
                 <textElement textAlignment="Right">
                     <font size="8" isItalic="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
-            </textField>
-            <textField evaluationTime="Report">
-                <reportElement x="0" y="10" width="555" height="20">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
-                <textElement textAlignment="Left">
-                    <font size="8" isItalic="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
             </textField>
         </band>
     </pageFooter>
