@@ -26,7 +26,6 @@ public class AuthoritiesServices {
 		return authoritiesRepository.findById(id).get();
 	}
 	public List<Authorities> findByUsername(String username){
-		System.out.println(authoritiesRepository.findByUsername(username));
 		return authoritiesRepository.findByUsername(username);
 	}
 

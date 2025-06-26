@@ -1,6 +1,7 @@
 package cu.edu.unah.GuayabalSiSDE.controller;
 
 import cu.edu.unah.GuayabalSiSDE.entity.Users;
+import cu.edu.unah.GuayabalSiSDE.services.AuthoritiesServices;
 import cu.edu.unah.GuayabalSiSDE.services.UsersServices;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/Users")
@@ -19,6 +21,9 @@ public class UsersController {
 	@Autowired
 	private UsersServices usersServices;
 
+	@Autowired
+	private AuthoritiesServices authoritiesServices;
+
 	@GetMapping(path = { "/findAll" }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<List<Users>> findAll() {
 		try {
@@ -26,6 +31,15 @@ public class UsersController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+
+	@GetMapping(path = "findAuthoritiesByUsername/{username}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<List<String>> findAll(@PathVariable String username){
+		List<String> roles = new ArrayList<>();
+		authoritiesServices.findByUsername(username).forEach(authorities -> {
+			roles.add(authorities.getAuthoritiesPK().getAuthority());
+		});
+		return ResponseEntity.ok(roles);
 	}
 
 	@GetMapping(path = { "/find/{id}" }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
