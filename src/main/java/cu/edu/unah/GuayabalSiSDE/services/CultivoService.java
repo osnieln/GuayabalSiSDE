@@ -19,4 +19,5 @@ public interface CultivoService {
 
     Cultivo delete(Long id);
 
+    List<Cultivo> buscarPorTexto(String texto);
 }

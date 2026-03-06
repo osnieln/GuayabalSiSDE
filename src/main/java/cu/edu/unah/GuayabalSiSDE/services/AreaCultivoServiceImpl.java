@@ -82,6 +82,7 @@ public class AreaCultivoServiceImpl implements AreaCultivoService {
         areaCultivoDb.setArea(areaCultivo.getArea());
         areaCultivoDb.setProduccionReal(areaCultivo.getProduccionReal());
         areaCultivoDb.setFechaRecogida(areaCultivo.getFechaRecogida());
+        areaCultivoDb.setActivo(areaCultivo.getActivo());
         List<Agroquimico> agroquimicoList = areaCultivo.getAgroquimicos();
         List<Agroquimico> agroquimicoListDb = new ArrayList<>();
         agroquimicoList.forEach(agroquimico -> {
@@ -117,5 +118,10 @@ public class AreaCultivoServiceImpl implements AreaCultivoService {
     @Override
     public List<AreaCultivo> findAreaCultivoByFechaRecogidaBefore(Date fechaRecogida) {
         return areaCultivoRepository.findAreaCultivoByFechaRecogidaBefore(fechaRecogida);
+    }
+
+    @Override
+    public List<AreaCultivo> findByActivo(Boolean activo) {
+        return areaCultivoRepository.findByActivo(activo);
     }
 }

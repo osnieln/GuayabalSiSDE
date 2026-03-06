@@ -11,8 +11,11 @@ import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponseReport;
 import cu.edu.unah.GuayabalSiSDE.util.DateFormatter;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
+import cu.edu.unah.GuayabalSiSDE.util.RendimientoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -153,5 +156,61 @@ public class AreaCultivoController {
             areaCultivoResponseList.add(AreaCultivoResponseReport.map(areaCultivo));
         });
         return ResponseEntity.ok(areaCultivoResponseList);
+    }
+
+    @GetMapping(path = "/activos")
+    public ResponseEntity<List<AreaCultivoResponse>> findActivos(){
+        List<AreaCultivo> list = areaCultivoService.findByActivo(true);
+        List<AreaCultivoResponse> responses = new ArrayList<>();
+        list.forEach(ac -> responses.add(AreaCultivoResponse.map(ac)));
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping(path = "/cosechados")
+    public ResponseEntity<List<AreaCultivoResponse>> findCosechados(){
+        List<AreaCultivo> list = areaCultivoService.findByActivo(false);
+        List<AreaCultivoResponse> responses = new ArrayList<>();
+        list.forEach(ac -> responses.add(AreaCultivoResponse.map(ac)));
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping(path = "/rendimiento")
+    public ResponseEntity<List<RendimientoResponse>> getRendimiento(){
+        List<AreaCultivo> list = areaCultivoService.findAll();
+        List<RendimientoResponse> responses = new ArrayList<>();
+        for (AreaCultivo ac : list) {
+            Double rendimiento = null;
+            if (ac.getPlanProd() != null && ac.getPlanProd() > 0 && ac.getProduccionReal() != null) {
+                rendimiento = (ac.getProduccionReal() / ac.getPlanProd()) * 100.0;
+            }
+            responses.add(RendimientoResponse.builder()
+                    .areaCultivoResponsePK(AreaCultivoResponsePK.map(ac.getAreaCultivoPk()))
+                    .planProd(ac.getPlanProd())
+                    .produccionReal(ac.getProduccionReal())
+                    .rendimientoPorcentaje(rendimiento)
+                    .build());
+        }
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping(path = "/exportar/csv")
+    public ResponseEntity<byte[]> exportarCsv(){
+        List<AreaCultivo> list = areaCultivoService.findAll();
+        StringBuilder sb = new StringBuilder();
+        sb.append("areaId,cultivoId,fechaSiembra,fechaRecogida,planProd,produccionReal,activo\n");
+        for (AreaCultivo ac : list) {
+            sb.append(ac.getAreaCultivoPk().getAreaId()).append(",")
+              .append(ac.getAreaCultivoPk().getCultivoId()).append(",")
+              .append(DateFormatter.format(ac.getAreaCultivoPk().getFechaSiembra())).append(",")
+              .append(ac.getFechaRecogida() != null ? DateFormatter.format(ac.getFechaRecogida()) : "").append(",")
+              .append(ac.getPlanProd() != null ? ac.getPlanProd() : "").append(",")
+              .append(ac.getProduccionReal() != null ? ac.getProduccionReal() : "").append(",")
+              .append(ac.getActivo() != null ? ac.getActivo() : "").append("\n");
+        }
+        byte[] csvBytes = sb.toString().getBytes();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("text/csv"));
+        headers.setContentDispositionFormData("attachment", "area_cultivos.csv");
+        return ResponseEntity.ok().headers(headers).body(csvBytes);
     }
 }

@@ -85,4 +85,9 @@ public class CultivoServiceImpl implements CultivoService{
         cultivoRepository.delete(cultivoDb);
         return cultivoDb;
     }
+
+    @Override
+    public List<Cultivo> buscarPorTexto(String texto) {
+        return cultivoRepository.findByDescripcionContainingIgnoreCase(texto);
+    }
 }

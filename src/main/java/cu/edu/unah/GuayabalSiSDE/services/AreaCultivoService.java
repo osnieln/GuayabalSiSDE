@@ -18,4 +18,5 @@ public interface AreaCultivoService {
     List<AreaCultivo> findAreaCultivoByProdCultivosPermanenteAfter(Double prodCultivosPermanente);
     List<AreaCultivo> findAreaCultivoByFechaRecogidaBefore(Date fechaRecogida);
 
+    List<AreaCultivo> findByActivo(Boolean activo);
 }

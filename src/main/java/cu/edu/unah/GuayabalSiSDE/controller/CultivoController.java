@@ -3,6 +3,8 @@ package cu.edu.unah.GuayabalSiSDE.controller;
 import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
 import cu.edu.unah.GuayabalSiSDE.services.CultivoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,5 +45,28 @@ public class CultivoController {
     @DeleteMapping (path = "delete/{id}")
     public ResponseEntity<Cultivo> delete(@PathVariable(required = true) Long id){
         return ResponseEntity.ok(cultivoService.delete(id));
+    }
+
+    @GetMapping(path = "buscar")
+    public ResponseEntity<List<Cultivo>> buscar(@RequestParam String texto){
+        return ResponseEntity.ok(cultivoService.buscarPorTexto(texto));
+    }
+
+    @GetMapping(path = "exportar/csv")
+    public ResponseEntity<byte[]> exportarCsv(){
+        List<Cultivo> cultivos = cultivoService.findAll();
+        StringBuilder sb = new StringBuilder();
+        sb.append("id,descripcion,produccion,tipoCultivo\n");
+        for (Cultivo c : cultivos) {
+            sb.append(c.getId()).append(",")
+              .append(c.getDescripcion() != null ? c.getDescripcion() : "").append(",")
+              .append(c.getProduccion() != null ? c.getProduccion().getDescripcion() : "").append(",")
+              .append(c.getTipoCultivo() != null ? c.getTipoCultivo().getNombre() : "").append("\n");
+        }
+        byte[] csvBytes = sb.toString().getBytes();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("text/csv"));
+        headers.setContentDispositionFormData("attachment", "cultivos.csv");
+        return ResponseEntity.ok().headers(headers).body(csvBytes);
     }
 }
