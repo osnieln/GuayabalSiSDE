@@ -79,4 +79,12 @@ public class AgroquimicoController {
     public ResponseEntity<AgroquimicoResponse> create(@PathVariable Long id) {
         return ResponseEntity.ok(AgroquimicoResponse.map(agroquimicoService.delete(id)));
     }
+
+    @GetMapping(path = "/masUsados")
+    public ResponseEntity<List<AgroquimicoResponse>> masUsados() {
+        List<Agroquimico> list = agroquimicoService.findMasUsados();
+        List<AgroquimicoResponse> listResponse = new ArrayList<>();
+        list.forEach(agroquimico -> listResponse.add(AgroquimicoResponse.map(agroquimico)));
+        return ResponseEntity.ok(listResponse);
+    }
 }

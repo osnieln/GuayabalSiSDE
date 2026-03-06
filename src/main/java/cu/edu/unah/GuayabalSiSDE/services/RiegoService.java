@@ -13,4 +13,10 @@ public interface RiegoService {
     Riego create(Riego riego);
     Riego edit(Riego riego);
     Riego delete(long id);
+
+    List<Riego> findProximosRiegos(int dias);
+
+    List<Riego> findHistorialByAreaId(Long areaId);
+
+    List<Riego> findRiegosConDesviacion(int diasMaximos);
 }

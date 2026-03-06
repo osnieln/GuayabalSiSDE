@@ -17,4 +17,6 @@ public interface AgroquimicoService {
     Agroquimico edit(Agroquimico agroquimico);
 
     Agroquimico delete(long id);
+
+    List<Agroquimico> findMasUsados();
 }

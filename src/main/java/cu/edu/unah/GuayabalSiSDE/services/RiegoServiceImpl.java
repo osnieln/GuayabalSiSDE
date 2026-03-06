@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -72,5 +74,26 @@ public class RiegoServiceImpl implements RiegoService {
         }
         riegoRepository.delete(riegoDb);
         return riegoDb;
+    }
+
+    @Override
+    public List<Riego> findProximosRiegos(int dias) {
+        Date hoy = Date.valueOf(LocalDate.now());
+        Date limite = Date.valueOf(LocalDate.now().plusDays(dias));
+        return riegoRepository.findByFechaPlanificacionBetween(hoy, limite);
+    }
+
+    @Override
+    public List<Riego> findHistorialByAreaId(Long areaId) {
+        return riegoRepository.findByAreaCultivo_Area_IdAndFechaRealIsNotNull(areaId);
+    }
+
+    @Override
+    public List<Riego> findRiegosConDesviacion(int diasMaximos) {
+        return riegoRepository.findAll().stream()
+                .filter(r -> r.getFechaReal() != null && r.getFechaPlanificacion() != null)
+                .filter(r -> Math.abs(r.getFechaReal().toLocalDate()
+                        .toEpochDay() - r.getFechaPlanificacion().toLocalDate().toEpochDay()) > diasMaximos)
+                .toList();
     }
 }

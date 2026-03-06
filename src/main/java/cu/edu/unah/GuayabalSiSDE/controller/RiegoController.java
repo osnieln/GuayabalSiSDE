@@ -85,4 +85,22 @@ public class RiegoController {
     public ResponseEntity<Riego> create(@PathVariable Long id) {
         return ResponseEntity.ok(riegoService.delete(id));
     }
+
+    @GetMapping(path = "/proximos/{dias}")
+    public ResponseEntity<List<RiegoResponse>> findProximosRiegos(@PathVariable int dias) {
+        List<Riego> riegos = riegoService.findProximosRiegos(dias);
+        return ResponseEntity.ok(riegos.stream().map(RiegoResponse::map).toList());
+    }
+
+    @GetMapping(path = "/historial/area/{areaId}")
+    public ResponseEntity<List<RiegoResponse>> findHistorialByAreaId(@PathVariable Long areaId) {
+        List<Riego> riegos = riegoService.findHistorialByAreaId(areaId);
+        return ResponseEntity.ok(riegos.stream().map(RiegoResponse::map).toList());
+    }
+
+    @GetMapping(path = "/validarFechas")
+    public ResponseEntity<List<RiegoResponse>> validarFechas(@RequestParam(defaultValue = "7") int diasMaximos) {
+        List<Riego> riegos = riegoService.findRiegosConDesviacion(diasMaximos);
+        return ResponseEntity.ok(riegos.stream().map(RiegoResponse::map).toList());
+    }
 }

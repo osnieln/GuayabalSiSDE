@@ -4,6 +4,8 @@ import cu.edu.unah.GuayabalSiSDE.entity.Area;
 import cu.edu.unah.GuayabalSiSDE.services.AreaService;
 import cu.edu.unah.GuayabalSiSDE.util.AreaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,4 +71,30 @@ public class AreaController {
         return areaService.findDistinctCapa();
     }
 
+    @GetMapping(path = "/findByCapa/{capa}")
+    public ResponseEntity<List<AreaResponse>> findByCapa(@PathVariable String capa){
+        List<Area> areas = areaService.findByCapa(capa);
+        List<AreaResponse> responses = new ArrayList<>();
+        for (Area area : areas) {
+            responses.add(AreaResponse.AreaToAreaResponse(area));
+        }
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping(path = "/exportar/csv")
+    public ResponseEntity<byte[]> exportarCsv(){
+        List<Area> areas = areaService.findAll();
+        StringBuilder sb = new StringBuilder();
+        sb.append("id,descripcion,capa\n");
+        for (Area a : areas) {
+            sb.append(a.getId()).append(",")
+              .append(a.getDescripcion() != null ? a.getDescripcion() : "").append(",")
+              .append(a.getCapa() != null ? a.getCapa() : "").append("\n");
+        }
+        byte[] csvBytes = sb.toString().getBytes();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("text/csv"));
+        headers.setContentDispositionFormData("attachment", "areas.csv");
+        return ResponseEntity.ok().headers(headers).body(csvBytes);
+    }
 }

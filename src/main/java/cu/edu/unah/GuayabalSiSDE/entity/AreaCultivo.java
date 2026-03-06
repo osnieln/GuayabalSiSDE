@@ -29,6 +29,7 @@ public class AreaCultivo implements Serializable {
     Double prodCultivosPermanente;
     Double prodCultivosTemporales;
     Double produccionReal;
+    Boolean activo;
 
     @JoinColumn(name = "cultivoId", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false)

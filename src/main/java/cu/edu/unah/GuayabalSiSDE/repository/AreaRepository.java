@@ -11,4 +11,5 @@ public interface AreaRepository extends JpaRepository<Area, Long> {
     @Query(nativeQuery = true, value = "SELECT DISTINCT(capa) FROM Area")
     List<String> findDistinctCapa();
 
+    List<Area> findByCapa(String capa);
 }

@@ -58,4 +58,9 @@ public class AreaServiceImpl implements AreaService{
     public List<String> findDistinctCapa() {
         return areaRepository.findDistinctCapa();
     }
+
+    @Override
+    public List<Area> findByCapa(String capa) {
+        return areaRepository.findByCapa(capa);
+    }
 }
