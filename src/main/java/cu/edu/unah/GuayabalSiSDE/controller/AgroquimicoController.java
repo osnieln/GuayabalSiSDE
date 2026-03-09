@@ -5,6 +5,7 @@ import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.services.AgroquimicoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaCultivoService;
 import cu.edu.unah.GuayabalSiSDE.util.AgroquimicoResponse;
+import cu.edu.unah.GuayabalSiSDE.util.AgroquimicoUsoResponse;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +79,20 @@ public class AgroquimicoController {
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<AgroquimicoResponse> create(@PathVariable Long id) {
         return ResponseEntity.ok(AgroquimicoResponse.map(agroquimicoService.delete(id)));
+    }
+
+    @GetMapping(path = "/masUtilizados")
+    public ResponseEntity<List<AgroquimicoUsoResponse>> findMasUtilizados() {
+        List<Agroquimico> list = agroquimicoService.findMasUtilizados();
+        List<AgroquimicoUsoResponse> result = new ArrayList<>();
+        for (Agroquimico a : list) {
+            int usos = a.getAreaCultivos() != null ? a.getAreaCultivos().size() : 0;
+            result.add(AgroquimicoUsoResponse.builder()
+                    .id(a.getId())
+                    .nombre(a.getNombre())
+                    .cantidadUsos(usos)
+                    .build());
+        }
+        return ResponseEntity.ok(result);
     }
 }

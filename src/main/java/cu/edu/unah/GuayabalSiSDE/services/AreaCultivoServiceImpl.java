@@ -3,8 +3,10 @@ package cu.edu.unah.GuayabalSiSDE.services;
 import cu.edu.unah.GuayabalSiSDE.entity.*;
 import cu.edu.unah.GuayabalSiSDE.repository.AreaCultivoRepository;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponse;
+import cu.edu.unah.GuayabalSiSDE.util.DateFormatter;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
+import cu.edu.unah.GuayabalSiSDE.util.RendimientoResponse;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -117,5 +119,33 @@ public class AreaCultivoServiceImpl implements AreaCultivoService {
     @Override
     public List<AreaCultivo> findAreaCultivoByFechaRecogidaBefore(Date fechaRecogida) {
         return areaCultivoRepository.findAreaCultivoByFechaRecogidaBefore(fechaRecogida);
+    }
+
+    @Override
+    public List<AreaCultivo> findByActivo(boolean activo) {
+        return areaCultivoRepository.findByActivo(activo);
+    }
+
+    @Override
+    public List<RendimientoResponse> calcularRendimiento() {
+        List<AreaCultivo> todos = areaCultivoRepository.findAll();
+        List<RendimientoResponse> resultado = new ArrayList<>();
+        for (AreaCultivo ac : todos) {
+            Double rendimiento = null;
+            if (ac.getPlanProd() != null && ac.getPlanProd() > 0 && ac.getProduccionReal() != null) {
+                rendimiento = (ac.getProduccionReal() / ac.getPlanProd()) * 100.0;
+            }
+            resultado.add(RendimientoResponse.builder()
+                    .areaId(ac.getAreaCultivoPk().getAreaId())
+                    .areaDescripcion(ac.getArea() != null ? ac.getArea().getDescripcion() : null)
+                    .cultivoId(ac.getAreaCultivoPk().getCultivoId())
+                    .cultivoDescripcion(ac.getCultivo() != null ? ac.getCultivo().getDescripcion() : null)
+                    .fechaSiembra(DateFormatter.format(ac.getAreaCultivoPk().getFechaSiembra()))
+                    .planProd(ac.getPlanProd())
+                    .produccionReal(ac.getProduccionReal())
+                    .rendimientoPorcentaje(rendimiento)
+                    .build());
+        }
+        return resultado;
     }
 }

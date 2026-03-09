@@ -124,4 +124,10 @@ public class AgroquimicoServiceImpl implements AgroquimicoService {
         agroquimicoRepository.delete(agroquimicoDb);
         return agroquimicoDb;
     }
+
+    @Override
+    @Transactional
+    public List<Agroquimico> findMasUtilizados() {
+        return agroquimicoRepository.findMasUtilizados();
+    }
 }

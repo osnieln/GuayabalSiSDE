@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -72,5 +74,17 @@ public class RiegoServiceImpl implements RiegoService {
         }
         riegoRepository.delete(riegoDb);
         return riegoDb;
+    }
+
+    @Override
+    public List<Riego> findRiegosProximos(int dias) {
+        Date hoy = Date.valueOf(LocalDate.now());
+        Date hasta = Date.valueOf(LocalDate.now().plusDays(dias));
+        return riegoRepository.findByFechaPlanificacionBetweenAndFechaRealIsNull(hoy, hasta);
+    }
+
+    @Override
+    public List<Riego> findHistorialByArea(Long areaId) {
+        return riegoRepository.findByAreaCultivo_AreaCultivoPk_AreaIdAndFechaRealIsNotNull(areaId);
     }
 }
