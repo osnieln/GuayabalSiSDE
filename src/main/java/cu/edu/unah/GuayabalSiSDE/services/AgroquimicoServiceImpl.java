@@ -4,6 +4,7 @@ import cu.edu.unah.GuayabalSiSDE.entity.Agroquimico;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.repository.AgroquimicoRepository;
 import cu.edu.unah.GuayabalSiSDE.repository.AreaCultivoRepository;
+import cu.edu.unah.GuayabalSiSDE.util.AgroquimicoReporteResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -129,5 +131,17 @@ public class AgroquimicoServiceImpl implements AgroquimicoService {
     @Transactional
     public List<Agroquimico> findMasUtilizados() {
         return agroquimicoRepository.findMasUtilizados();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AgroquimicoReporteResponse> findMasUtilizadosConConteo() {
+        return agroquimicoRepository.findMasUtilizadosConConteo().stream().map(row ->
+            AgroquimicoReporteResponse.builder()
+                .id((Long) row[0])
+                .nombre((String) row[1])
+                .totalCultivos(((Number) row[2]).intValue())
+                .build()
+        ).collect(Collectors.toList());
     }
 }

@@ -1,7 +1,6 @@
 package cu.edu.unah.GuayabalSiSDE.reportes;
 
 import cu.edu.unah.GuayabalSiSDE.controller.AreaCultivoController;
-import cu.edu.unah.GuayabalSiSDE.entity.Agroquimico;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.services.AgroquimicoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaCultivoService;
@@ -217,13 +216,9 @@ public class ReporteAreaCultivoService {
     public byte[] exportReportCultivosPorVencer(int dias) throws FileNotFoundException, JRException {
         List<AreaCultivo> cultivos = areaCultivoService.findCultivosPorVencer(dias);
 
-        if (cultivos == null || cultivos.isEmpty()) {
-            throw new RuntimeException("No se encontraron cultivos por vencer en los próximos " + dias + " días");
-        }
-
-        List<AreaCultivoResponseReport> data = cultivos.stream()
-                .map(AreaCultivoResponseReport::map)
-                .collect(Collectors.toList());
+        List<AreaCultivoResponseReport> data = (cultivos != null)
+                ? cultivos.stream().map(AreaCultivoResponseReport::map).collect(Collectors.toList())
+                : java.util.Collections.emptyList();
 
         File file = ResourceUtils.getFile("classpath:reportes/cultivos_por_vencer.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
@@ -254,11 +249,7 @@ public class ReporteAreaCultivoService {
     }
 
     public byte[] exportReportAgroquimicosMasUsados() throws FileNotFoundException, JRException {
-        List<Agroquimico> agroquimicos = agroquimicoService.findMasUtilizados();
-
-        if (agroquimicos == null || agroquimicos.isEmpty()) {
-            throw new RuntimeException("No se encontraron agroquímicos registrados");
-        }
+        List<AgroquimicoReporteResponse> agroquimicos = agroquimicoService.findMasUtilizadosConConteo();
 
         File file = ResourceUtils.getFile("classpath:reportes/agroquimicos_reporte.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
@@ -267,7 +258,7 @@ public class ReporteAreaCultivoService {
             Map<String, Object> d = new HashMap<>();
             d.put("id", ag.getId());
             d.put("nombre", ag.getNombre());
-            d.put("totalCultivos", ag.getAreaCultivos() != null ? ag.getAreaCultivos().size() : 0);
+            d.put("totalCultivos", ag.getTotalCultivos());
             return d;
         }).collect(Collectors.toList());
 

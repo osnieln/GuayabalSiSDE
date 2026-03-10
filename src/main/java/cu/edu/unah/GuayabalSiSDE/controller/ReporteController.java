@@ -1,7 +1,5 @@
 package cu.edu.unah.GuayabalSiSDE.controller;
 
-import cu.edu.unah.GuayabalSiSDE.entity.Agroquimico;
-import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.reportes.ReporteAreaCultivoService;
 import cu.edu.unah.GuayabalSiSDE.reportes.ReporteService;
 import cu.edu.unah.GuayabalSiSDE.services.AgroquimicoService;
@@ -220,8 +218,6 @@ public class ReporteController {
 
     @GetMapping("/preview/agroquimicosMasUsados")
     public ResponseEntity<List<AgroquimicoReporteResponse>> previewAgroquimicos() {
-        List<AgroquimicoReporteResponse> data = agroquimicoService.findMasUtilizados().stream()
-                .map(AgroquimicoReporteResponse::map).collect(Collectors.toList());
-        return ResponseEntity.ok(data);
+        return ResponseEntity.ok(agroquimicoService.findMasUtilizadosConConteo());
     }
 }

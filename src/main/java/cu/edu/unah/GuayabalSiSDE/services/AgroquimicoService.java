@@ -1,6 +1,7 @@
 package cu.edu.unah.GuayabalSiSDE.services;
 
 import cu.edu.unah.GuayabalSiSDE.entity.Agroquimico;
+import cu.edu.unah.GuayabalSiSDE.util.AgroquimicoReporteResponse;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface AgroquimicoService {
     Agroquimico delete(long id);
 
     List<Agroquimico> findMasUtilizados();
+
+    List<AgroquimicoReporteResponse> findMasUtilizadosConConteo();
 }
