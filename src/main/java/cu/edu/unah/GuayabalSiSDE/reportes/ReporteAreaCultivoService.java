@@ -1,6 +1,8 @@
 package cu.edu.unah.GuayabalSiSDE.reportes;
 
 import cu.edu.unah.GuayabalSiSDE.controller.AreaCultivoController;
+import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
+import cu.edu.unah.GuayabalSiSDE.services.AreaCultivoService;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponse;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponseReport;
 import net.sf.jasperreports.engine.*;
@@ -22,7 +24,41 @@ public class ReporteAreaCultivoService {
     @Autowired
     private AreaCultivoController areaCultivoController;
 
+    @Autowired
+    private AreaCultivoService areaCultivoService;
+
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+    public byte[] exportReportAllAreasCultivo() throws FileNotFoundException, JRException {
+        List<AreaCultivo> todos = areaCultivoService.findAll();
+
+        if (todos == null || todos.isEmpty()) {
+            throw new RuntimeException("No se encontraron áreas de cultivo registradas");
+        }
+
+        List<AreaCultivoResponseReport> areasCultivo = todos.stream()
+                .map(AreaCultivoResponseReport::map)
+                .collect(Collectors.toList());
+
+        File file = ResourceUtils.getFile("classpath:reportes/area_cultivo_plan_prod.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+
+        List<Map<String, Object>> data = areasCultivo.stream()
+                .map(this::crearDatosAreaCultivo)
+                .collect(Collectors.toList());
+
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(data);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("REPORT_TITLE", "RESUMEN GENERAL DE ÁREAS DE CULTIVO");
+        parameters.put("GENERATION_DATE", "Generado el: " + dateFormat.format(new Date()));
+        parameters.put("TOTAL_REGISTROS", "Total de registros: " + areasCultivo.size());
+        parameters.put("RANGO_PLAN", "Sin filtros — todos los registros");
+        parameters.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
+
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+        return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
 
     public byte[] exportReportByPlanProdBetween(Long planProdInicio, Long planProdFin) throws FileNotFoundException, JRException {
         // Obtener los datos del controlador

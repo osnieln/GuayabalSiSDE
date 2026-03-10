@@ -25,15 +25,35 @@ public class ReporteController {
     public ResponseEntity<byte[]> generarReporteCultivos() {
         try {
             byte[] reporte = reporteService.exportReport();
-            
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("attachment", "reporte_cultivos.pdf");
-            
+
             return ResponseEntity.ok()
                     .headers(headers)
                     .body(reporte);
-                    
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/todasAreasCultivo")
+    public ResponseEntity<byte[]> generarReporteTodasAreasCultivo() {
+        try {
+            byte[] reporte = reporteAreaCultivoService.exportReportAllAreasCultivo();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "reporte_resumen_areas_cultivo.pdf");
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(reporte);
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
