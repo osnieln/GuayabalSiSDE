@@ -1,8 +1,11 @@
 package cu.edu.unah.GuayabalSiSDE.reportes;
 
 import cu.edu.unah.GuayabalSiSDE.controller.AreaCultivoController;
+import cu.edu.unah.GuayabalSiSDE.entity.Agroquimico;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
+import cu.edu.unah.GuayabalSiSDE.services.AgroquimicoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaCultivoService;
+import cu.edu.unah.GuayabalSiSDE.util.AgroquimicoReporteResponse;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponse;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponseReport;
 import net.sf.jasperreports.engine.*;
@@ -26,6 +29,9 @@ public class ReporteAreaCultivoService {
 
     @Autowired
     private AreaCultivoService areaCultivoService;
+
+    @Autowired
+    private AgroquimicoService agroquimicoService;
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
@@ -204,7 +210,76 @@ public class ReporteAreaCultivoService {
         // ID único para agrupación
         datos.put("grupoId", areaCultivo.getArea() + "_" +
                             areaCultivo.getCultivo());
-        
+
         return datos;
+    }
+
+    public byte[] exportReportCultivosPorVencer(int dias) throws FileNotFoundException, JRException {
+        List<AreaCultivo> cultivos = areaCultivoService.findCultivosPorVencer(dias);
+
+        if (cultivos == null || cultivos.isEmpty()) {
+            throw new RuntimeException("No se encontraron cultivos por vencer en los próximos " + dias + " días");
+        }
+
+        List<AreaCultivoResponseReport> data = cultivos.stream()
+                .map(AreaCultivoResponseReport::map)
+                .collect(Collectors.toList());
+
+        File file = ResourceUtils.getFile("classpath:reportes/cultivos_por_vencer.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+
+        List<Map<String, Object>> rows = data.stream().map(ac -> {
+            Map<String, Object> d = new HashMap<>();
+            d.put("area", ac.getArea());
+            d.put("cultivo", ac.getCultivo());
+            d.put("fechaSiembra", ac.getFechaSiembra());
+            d.put("fechaRecogida", ac.getFechaRecogida());
+            d.put("planProd", ac.getPlanProd());
+            d.put("produccionReal", ac.getProduccionReal());
+            d.put("agroquimicos", ac.getAgroquimicos().isEmpty() ? "Ninguno" : String.join(", ", ac.getAgroquimicos()));
+            return d;
+        }).collect(Collectors.toList());
+
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(rows);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("REPORT_TITLE", "CULTIVOS PRÓXIMOS A VENCER");
+        parameters.put("GENERATION_DATE", "Generado el: " + dateFormat.format(new Date()));
+        parameters.put("TOTAL_REGISTROS", "Total de registros: " + data.size());
+        parameters.put("FILTRO_DIAS", "Próximos " + dias + " día(s)");
+        parameters.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
+
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+        return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
+    public byte[] exportReportAgroquimicosMasUsados() throws FileNotFoundException, JRException {
+        List<Agroquimico> agroquimicos = agroquimicoService.findMasUtilizados();
+
+        if (agroquimicos == null || agroquimicos.isEmpty()) {
+            throw new RuntimeException("No se encontraron agroquímicos registrados");
+        }
+
+        File file = ResourceUtils.getFile("classpath:reportes/agroquimicos_reporte.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+
+        List<Map<String, Object>> rows = agroquimicos.stream().map(ag -> {
+            Map<String, Object> d = new HashMap<>();
+            d.put("id", ag.getId());
+            d.put("nombre", ag.getNombre());
+            d.put("totalCultivos", ag.getAreaCultivos() != null ? ag.getAreaCultivos().size() : 0);
+            return d;
+        }).collect(Collectors.toList());
+
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(rows);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("REPORT_TITLE", "AGROQUÍMICOS MÁS UTILIZADOS");
+        parameters.put("GENERATION_DATE", "Generado el: " + dateFormat.format(new Date()));
+        parameters.put("TOTAL_REGISTROS", "Total de agroquímicos: " + agroquimicos.size());
+        parameters.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
+
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+        return JasperExportManager.exportReportToPdf(jasperPrint);
     }
 }

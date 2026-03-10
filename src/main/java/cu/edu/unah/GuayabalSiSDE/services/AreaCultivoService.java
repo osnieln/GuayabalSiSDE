@@ -21,4 +21,5 @@ public interface AreaCultivoService {
     List<AreaCultivo> findByActivo(boolean activo);
     List<RendimientoResponse> calcularRendimiento();
 
+    List<AreaCultivo> findCultivosPorVencer(int dias);
 }

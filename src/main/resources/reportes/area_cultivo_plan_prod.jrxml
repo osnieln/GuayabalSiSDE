@@ -2,13 +2,10 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-              name="reporte_areas_cultivo_plan_prod" pageWidth="595" pageHeight="842" columnWidth="555" 
-              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" 
+              name="reporte_areas_cultivo" pageWidth="842" pageHeight="595" orientation="Landscape"
+              columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
               whenNoDataType="AllSectionsNoDetail" isIgnorePagination="true">
 
-    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-
-    <!-- Parámetros -->
     <parameter name="REPORT_TITLE" class="java.lang.String">
         <defaultValueExpression><![CDATA["INFORME DE ÁREAS DE CULTIVO"]]></defaultValueExpression>
     </parameter>
@@ -22,245 +19,308 @@
         <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
     </parameter>
 
-    <!-- Campos -->
-    <field name="areaId" class="java.lang.String">
-        <fieldDescription><![CDATA[areaId]]></fieldDescription>
-    </field>
-    <field name="cultivoId" class="java.lang.String">
-        <fieldDescription><![CDATA[cultivoId]]></fieldDescription>
-    </field>
-    <field name="fechaSiembra" class="java.lang.String">
-        <fieldDescription><![CDATA[fechaSiembra]]></fieldDescription>
-    </field>
-    <field name="fechaRecogida" class="java.lang.String">
-        <fieldDescription><![CDATA[fechaRecogida]]></fieldDescription>
-    </field>
-    <field name="planProd" class="java.lang.Long">
-        <fieldDescription><![CDATA[planProd]]></fieldDescription>
-    </field>
-    <field name="prodCultivosPermanente" class="java.lang.Double">
-        <fieldDescription><![CDATA[prodCultivosPermanente]]></fieldDescription>
-    </field>
-    <field name="prodCultivosTemporales" class="java.lang.Double">
-        <fieldDescription><![CDATA[prodCultivosTemporales]]></fieldDescription>
-    </field>
-    <field name="produccionReal" class="java.lang.Double">
-        <fieldDescription><![CDATA[produccionReal]]></fieldDescription>
-    </field>
-    <field name="agroquimicos" class="java.lang.String">
-        <fieldDescription><![CDATA[agroquimicos]]></fieldDescription>
-    </field>
-    <field name="grupoId" class="java.lang.String">
-        <fieldDescription><![CDATA[grupoId]]></fieldDescription>
-    </field>
+    <field name="areaId" class="java.lang.String"/>
+    <field name="cultivoId" class="java.lang.String"/>
+    <field name="fechaSiembra" class="java.lang.String"/>
+    <field name="fechaRecogida" class="java.lang.String"/>
+    <field name="planProd" class="java.lang.Long"/>
+    <field name="prodCultivosPermanente" class="java.lang.Double"/>
+    <field name="prodCultivosTemporales" class="java.lang.Double"/>
+    <field name="produccionReal" class="java.lang.Double"/>
+    <field name="agroquimicos" class="java.lang.String"/>
+    <field name="grupoId" class="java.lang.String"/>
 
-    <!-- Agrupación por área de cultivo -->
-    <group name="AreaCultivoGroup">
-        <groupExpression><![CDATA[$F{grupoId}]]></groupExpression>
-        <groupHeader>
-            <band height="40">
-                <rectangle>
-                    <reportElement mode="Opaque" x="0" y="0" width="555" height="40" backcolor="#E8F5E9" forecolor="#2E7D32">
-                        <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                    </reportElement>
-                    <graphicElement>
-                        <pen lineWidth="0.5"/>
-                    </graphicElement>
-                </rectangle>
-                <textField>
-                    <reportElement x="10" y="10" width="535" height="20" forecolor="#2E7D32">
-                        <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                        <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                    </reportElement>
-                    <textElement textAlignment="Left" verticalAlignment="Middle">
-                        <font fontName="SansSerif" size="12" isBold="true"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA["Area: " + $F{areaId} + " | Cultivo: " + $F{cultivoId}]]></textFieldExpression>
-                </textField>
-            </band>
-        </groupHeader>
-    </group>
+    <variable name="TOTAL_PLAN" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{planProd} != null ? $F{planProd} : 0L]]></variableExpression>
+    </variable>
+    <variable name="TOTAL_REAL" class="java.lang.Double" calculation="Sum">
+        <variableExpression><![CDATA[$F{produccionReal} != null ? $F{produccionReal} : 0.0]]></variableExpression>
+    </variable>
+    <variable name="TOTAL_PERMANENTE" class="java.lang.Double" calculation="Sum">
+        <variableExpression><![CDATA[$F{prodCultivosPermanente} != null ? $F{prodCultivosPermanente} : 0.0]]></variableExpression>
+    </variable>
+    <variable name="TOTAL_TEMPORAL" class="java.lang.Double" calculation="Sum">
+        <variableExpression><![CDATA[$F{prodCultivosTemporales} != null ? $F{prodCultivosTemporales} : 0.0]]></variableExpression>
+    </variable>
 
-    <!-- Título del reporte -->
     <title>
-        <band height="120">
+        <band height="80">
             <rectangle>
-                <reportElement x="0" y="0" width="555" height="100" backcolor="#4CAF50">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
+                <reportElement x="0" y="0" width="802" height="60" backcolor="#4CAF50"/>
             </rectangle>
             <textField>
-                <reportElement x="0" y="10" width="555" height="30" forecolor="#FFFFFF">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
+                <reportElement x="0" y="8" width="802" height="26" forecolor="#FFFFFF"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="18" isBold="true"/>
+                    <font fontName="SansSerif" size="17" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$P{REPORT_TITLE}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="0" y="40" width="555" height="20" forecolor="#E8F5E9">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10" isItalic="true"/>
+                <reportElement x="0" y="36" width="400" height="14" forecolor="#E8F5E9"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isItalic="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$P{GENERATION_DATE}]]></textFieldExpression>
+                <textFieldExpression><![CDATA["  " + $P{GENERATION_DATE}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="0" y="60" width="555" height="20" forecolor="#E8F5E9">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10" isBold="true"/>
+                <reportElement x="400" y="36" width="402" height="14" forecolor="#E8F5E9"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$P{RANGO_PLAN}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$P{RANGO_PLAN} + "  "]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="0" y="80" width="555" height="20" forecolor="#2E7D32">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
+                <reportElement x="0" y="51" width="802" height="12" forecolor="#FFFFFF"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10" isBold="true"/>
+                    <font fontName="SansSerif" size="8" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$P{TOTAL_REGISTROS}]]></textFieldExpression>
             </textField>
         </band>
     </title>
 
-    <!-- Detalle del reporte -->
+    <columnHeader>
+        <band height="24">
+            <rectangle>
+                <reportElement x="0" y="0" width="802" height="24" backcolor="#2E7D32"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="2" y="4" width="130" height="16" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ÁREA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="132" y="4" width="130" height="16" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[CULTIVO]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="262" y="4" width="76" height="16" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[F. SIEMBRA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="338" y="4" width="76" height="16" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[F. RECOGIDA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="414" y="4" width="72" height="16" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[PLAN (t)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="486" y="4" width="72" height="16" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[REAL (t)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="558" y="4" width="68" height="16" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[PERM. (t)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="626" y="4" width="68" height="16" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[TEMP. (t)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="694" y="4" width="108" height="16" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[AGROQUÍMICOS]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
     <detail>
-        <band height="200">
-            <!-- Sección de fechas -->
+        <band height="20">
             <rectangle>
-                <reportElement x="20" y="10" width="515" height="30" backcolor="#F1F8E9">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+                <reportElement x="0" y="0" width="802" height="20" backcolor="#F1F8E9">
+                    <printWhenExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></printWhenExpression>
                 </reportElement>
             </rectangle>
-            <staticText>
-                <reportElement x="30" y="15" width="150" height="20" forecolor="#2E7D32">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement x="2" y="2" width="128" height="16"/>
                 <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10" isBold="true"/>
+                    <font fontName="SansSerif" size="7"/>
                 </textElement>
-                <text><![CDATA[Fechas importantes:]]></text>
-            </staticText>
-            <textField>
-                <reportElement x="180" y="15" width="345" height="20">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
-                <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Siembra: " + $F{fechaSiembra} + "   |   Recogida: " + ($F{fechaRecogida} != null ? $F{fechaRecogida} : "No definida")]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{areaId}]]></textFieldExpression>
             </textField>
-
-            <!-- Sección de producción -->
-            <rectangle>
-                <reportElement x="20" y="50" width="515" height="30" backcolor="#F1F8E9">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
-            </rectangle>
-            <staticText>
-                <reportElement x="30" y="55" width="150" height="20" forecolor="#2E7D32">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement x="132" y="2" width="128" height="16"/>
                 <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10" isBold="true"/>
+                    <font fontName="SansSerif" size="7"/>
                 </textElement>
-                <text><![CDATA[Producción:]]></text>
-            </staticText>
-            <textField>
-                <reportElement x="180" y="55" width="345" height="20">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
-                <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Plan: " + $F{planProd} + "   |   Real: " + ($F{produccionReal} != null ? $F{produccionReal} : "0.0")]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{cultivoId}]]></textFieldExpression>
             </textField>
-
-            <!-- Sección de producción detallada -->
-            <rectangle>
-                <reportElement x="20" y="90" width="515" height="30" backcolor="#F1F8E9">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
-            </rectangle>
-            <staticText>
-                <reportElement x="30" y="95" width="200" height="20" forecolor="#2E7D32">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
-                <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10" isBold="true"/>
+            <textField isBlankWhenNull="true">
+                <reportElement x="262" y="2" width="74" height="16"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="7"/>
                 </textElement>
-                <text><![CDATA[Producción por tipo de cultivo:]]></text>
-            </staticText>
-            <textField>
-                <reportElement x="230" y="95" width="295" height="20">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
-                <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Permanentes: " + ($F{prodCultivosPermanente} != null ? $F{prodCultivosPermanente} : "0.0") + 
-                    "   |   Temporales: " + ($F{prodCultivosTemporales} != null ? $F{prodCultivosTemporales} : "0.0")]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{fechaSiembra}]]></textFieldExpression>
             </textField>
-
-            <!-- Sección de agroquímicos -->
-            <rectangle>
-                <reportElement x="20" y="130" width="515" height="30" backcolor="#F1F8E9">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
-            </rectangle>
-            <staticText>
-                <reportElement x="30" y="135" width="150" height="20" forecolor="#2E7D32">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
-                <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10" isBold="true"/>
+            <textField isBlankWhenNull="true">
+                <reportElement x="338" y="2" width="74" height="16"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="7"/>
                 </textElement>
-                <text><![CDATA[Agroquímicos utilizados:]]></text>
-            </staticText>
-            <textField isStretchWithOverflow="true">
-                <reportElement x="180" y="135" width="345" height="20" isPrintWhenDetailOverflows="true">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
+                <textFieldExpression><![CDATA[$F{fechaRecogida} != null ? $F{fechaRecogida} : "-"]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="414" y="2" width="70" height="16"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{planProd} != null ? $F{planProd}.toString() : "-"]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="486" y="2" width="70" height="16"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{produccionReal} != null ? String.format("%.1f", $F{produccionReal}) : "-"]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="558" y="2" width="66" height="16"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{prodCultivosPermanente} != null ? String.format("%.1f", $F{prodCultivosPermanente}) : "-"]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="626" y="2" width="66" height="16"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{prodCultivosTemporales} != null ? String.format("%.1f", $F{prodCultivosTemporales}) : "-"]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement x="694" y="2" width="106" height="16"/>
                 <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10"/>
+                    <font fontName="SansSerif" size="6"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{agroquimicos}]]></textFieldExpression>
             </textField>
-
-            <!-- Línea separadora -->
             <line>
-                <reportElement x="0" y="169" width="555" height="1">
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
-                <graphicElement>
-                    <pen lineWidth="0.5" lineColor="#CCCCCC"/>
-                </graphicElement>
+                <reportElement x="130" y="0" width="1" height="20" forecolor="#C8E6C9"/>
+                <graphicElement><pen lineWidth="0.3"/></graphicElement>
+            </line>
+            <line>
+                <reportElement x="260" y="0" width="1" height="20" forecolor="#C8E6C9"/>
+                <graphicElement><pen lineWidth="0.3"/></graphicElement>
+            </line>
+            <line>
+                <reportElement x="336" y="0" width="1" height="20" forecolor="#C8E6C9"/>
+                <graphicElement><pen lineWidth="0.3"/></graphicElement>
+            </line>
+            <line>
+                <reportElement x="412" y="0" width="1" height="20" forecolor="#C8E6C9"/>
+                <graphicElement><pen lineWidth="0.3"/></graphicElement>
+            </line>
+            <line>
+                <reportElement x="484" y="0" width="1" height="20" forecolor="#C8E6C9"/>
+                <graphicElement><pen lineWidth="0.3"/></graphicElement>
+            </line>
+            <line>
+                <reportElement x="556" y="0" width="1" height="20" forecolor="#C8E6C9"/>
+                <graphicElement><pen lineWidth="0.3"/></graphicElement>
+            </line>
+            <line>
+                <reportElement x="624" y="0" width="1" height="20" forecolor="#C8E6C9"/>
+                <graphicElement><pen lineWidth="0.3"/></graphicElement>
+            </line>
+            <line>
+                <reportElement x="692" y="0" width="1" height="20" forecolor="#C8E6C9"/>
+                <graphicElement><pen lineWidth="0.3"/></graphicElement>
+            </line>
+            <line>
+                <reportElement x="0" y="19" width="802" height="1" forecolor="#C8E6C9"/>
+                <graphicElement><pen lineWidth="0.3"/></graphicElement>
             </line>
         </band>
     </detail>
 
-    <!-- Pie de página -->
-    <pageFooter>
+    <summary>
         <band height="30">
-            <textField evaluationTime="Report">
-                <reportElement x="0" y="10" width="555" height="20">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
-                <textElement textAlignment="Center">
-                    <font fontName="SansSerif" size="8"/>
+            <rectangle>
+                <reportElement x="0" y="4" width="802" height="22" backcolor="#A5D6A7"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="2" y="7" width="410" height="16" forecolor="#1B5E20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+                <text><![CDATA[TOTALES:   ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="414" y="7" width="70" height="16" forecolor="#1B5E20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TOTAL_PLAN}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="486" y="7" width="70" height="16" forecolor="#1B5E20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[String.format("%.1f", $V{TOTAL_REAL})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="558" y="7" width="66" height="16" forecolor="#1B5E20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[String.format("%.1f", $V{TOTAL_PERMANENTE})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="626" y="7" width="66" height="16" forecolor="#1B5E20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[String.format("%.1f", $V{TOTAL_TEMPORAL})]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+
+    <pageFooter>
+        <band height="20">
+            <line>
+                <reportElement x="0" y="0" width="802" height="1" forecolor="#2E7D32"/>
+                <graphicElement><pen lineWidth="0.5"/></graphicElement>
+            </line>
+            <staticText>
+                <reportElement x="0" y="3" width="400" height="14" forecolor="#757575"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="7" isItalic="true"/>
+                </textElement>
+                <text><![CDATA[  Sistema de Gestión Agrícola — Guayabal]]></text>
+            </staticText>
+            <textField evaluationTime="Report">
+                <reportElement x="680" y="3" width="122" height="14" forecolor="#757575"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Pág. " + $V{PAGE_NUMBER}]]></textFieldExpression>
             </textField>
         </band>
     </pageFooter>

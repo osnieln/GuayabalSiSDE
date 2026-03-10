@@ -16,4 +16,6 @@ public interface AreaCultivoRepository extends JpaRepository<AreaCultivo, AreaCu
     List<AreaCultivo> findAreaCultivoByFechaRecogidaBefore(Date fechaRecogida);
 
     List<AreaCultivo> findByActivo(boolean activo);
+
+    List<AreaCultivo> findAreaCultivoByFechaRecogidaBetween(Date fechaInicio, Date fechaFin);
 }

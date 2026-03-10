@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,6 +125,13 @@ public class AreaCultivoServiceImpl implements AreaCultivoService {
     @Override
     public List<AreaCultivo> findByActivo(boolean activo) {
         return areaCultivoRepository.findByActivo(activo);
+    }
+
+    @Override
+    public List<AreaCultivo> findCultivosPorVencer(int dias) {
+        Date hoy = Date.valueOf(LocalDate.now());
+        Date limite = Date.valueOf(LocalDate.now().plusDays(dias));
+        return areaCultivoRepository.findAreaCultivoByFechaRecogidaBetween(hoy, limite);
     }
 
     @Override
