@@ -201,10 +201,7 @@ public class ReporteAreaCultivoService {
         datos.put("prodCultivosTemporales", areaCultivo.getProdCultivosTemporales());
         datos.put("produccionReal", areaCultivo.getProduccionReal());
         
-        // Agroquímicos como string separado por comas
-        String agroquimicos = !areaCultivo.getAgroquimicos().isEmpty() ?
-                String.join(", ", areaCultivo.getAgroquimicos()) : "Ninguno";
-        datos.put("agroquimicos", agroquimicos);
+        datos.put("agroquimicos", areaCultivo.getAgroquimicos());
         
         // ID único para agrupación
         datos.put("grupoId", areaCultivo.getArea() + "_" +
@@ -231,7 +228,7 @@ public class ReporteAreaCultivoService {
             d.put("fechaRecogida", ac.getFechaRecogida());
             d.put("planProd", ac.getPlanProd());
             d.put("produccionReal", ac.getProduccionReal());
-            d.put("agroquimicos", ac.getAgroquimicos().isEmpty() ? "Ninguno" : String.join(", ", ac.getAgroquimicos()));
+            d.put("agroquimicos", ac.getAgroquimicos());
             return d;
         }).collect(Collectors.toList());
 
