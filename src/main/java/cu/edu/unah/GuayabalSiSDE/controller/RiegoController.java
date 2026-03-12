@@ -8,6 +8,7 @@ import cu.edu.unah.GuayabalSiSDE.services.RiegoService;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponsePK;
 import cu.edu.unah.GuayabalSiSDE.util.DateFormatter;
 import cu.edu.unah.GuayabalSiSDE.util.RiegoResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class RiegoController {
     }
 
     @PostMapping(path = "/create")
-    public ResponseEntity<RiegoResponse> create(@RequestBody RiegoResponse riegoResponse) {
+    public ResponseEntity<RiegoResponse> create(@Valid @RequestBody RiegoResponse riegoResponse) {
         AreaCultivo areaCultivoDb = areaCultivoService.findById(AreaCultivoResponsePK.map(riegoResponse.getAreaCultivoResponsePk()));
         if (areaCultivoDb == null) {
             return ResponseEntity.ok(null);
@@ -70,7 +71,7 @@ public class RiegoController {
     }
 
     @PutMapping(path = "/edit")
-    public ResponseEntity<RiegoResponse> edit(@RequestBody RiegoResponse riegoResponse) {
+    public ResponseEntity<RiegoResponse> edit(@Valid @RequestBody RiegoResponse riegoResponse) {
         AreaCultivo areaCultivoDb = areaCultivoService.findById(AreaCultivoResponsePK.map(riegoResponse.getAreaCultivoResponsePk()));
         if (areaCultivoDb == null) {
             return ResponseEntity.ok(null);

@@ -5,6 +5,8 @@ import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.repository.AgroquimicoRepository;
 import cu.edu.unah.GuayabalSiSDE.repository.AreaCultivoRepository;
 import cu.edu.unah.GuayabalSiSDE.util.AgroquimicoReporteResponse;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,11 +47,12 @@ public class AgroquimicoServiceImpl implements AgroquimicoService {
     @Override
     @Transactional
     public Agroquimico create(Agroquimico agroquimico) {
+        if (agroquimico.getNombre() == null || agroquimico.getNombre().isBlank())
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "El nombre del agroquímico es obligatorio.");
         // Verificar si ya existe un agroquímico con el mismo nombre
         Agroquimico agroquimicoDb = agroquimicoRepository.findByNombre(agroquimico.getNombre());
-        if (agroquimicoDb != null) {
-            return null;
-        }
+        if (agroquimicoDb != null)
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "Ya existe un agroquímico con el nombre \"" + agroquimico.getNombre() + "\".");
 
         // Guardar el agroquímico primero para obtener el ID generado
         Agroquimico savedAgroquimico = agroquimicoRepository.save(agroquimico);
@@ -77,8 +80,11 @@ public class AgroquimicoServiceImpl implements AgroquimicoService {
     @Override
     @Transactional
     public Agroquimico edit(Agroquimico agroquimico) {
+        if (agroquimico.getNombre() == null || agroquimico.getNombre().isBlank())
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "El nombre del agroquímico es obligatorio.");
         Agroquimico agroquimicoDb = agroquimicoRepository.findByNombre(agroquimico.getNombre());
-        if(agroquimicoDb == null) return null;
+        if (agroquimicoDb == null)
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró el agroquímico con nombre \"" + agroquimico.getNombre() + "\".");
 
         // Obtener las áreas de cultivo actuales
         List<AreaCultivo> areasActuales = new ArrayList<>(agroquimicoDb.getAreaCultivos());
@@ -119,10 +125,9 @@ public class AgroquimicoServiceImpl implements AgroquimicoService {
     public Agroquimico delete(long id) {
         Agroquimico agroquimicoDb = findById(id);
         if (agroquimicoDb == null)
-            return null;
-        if(agroquimicoDb.getAreaCultivos() != null && !agroquimicoDb.getAreaCultivos().isEmpty()) {
-            return null;
-        }
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró el agroquímico con ID " + id + ".");
+        if (agroquimicoDb.getAreaCultivos() != null && !agroquimicoDb.getAreaCultivos().isEmpty())
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se puede eliminar el agroquímico porque está asociado a " + agroquimicoDb.getAreaCultivos().size() + " área(s) de cultivo.");
         agroquimicoRepository.delete(agroquimicoDb);
         return agroquimicoDb;
     }

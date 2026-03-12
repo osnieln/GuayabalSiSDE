@@ -4,6 +4,7 @@ import cu.edu.unah.GuayabalSiSDE.entity.Users;
 import cu.edu.unah.GuayabalSiSDE.services.AuthoritiesServices;
 import cu.edu.unah.GuayabalSiSDE.services.UsersServices;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,7 +54,7 @@ public class UsersController {
 
 	@PostMapping(path = { "/create" }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Users> createUsers(
-			@RequestBody Users users) throws URISyntaxException {
+			@Valid @RequestBody Users users) throws URISyntaxException {
 		Users result = usersServices.save(users);
 		return ResponseEntity.created(new URI("/Users/create/" + result.getUsername())).body(result);
 	}

@@ -4,6 +4,8 @@ import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
 import cu.edu.unah.GuayabalSiSDE.entity.Riego;
 import cu.edu.unah.GuayabalSiSDE.repository.RiegoRepository;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -42,24 +44,31 @@ public class RiegoServiceImpl implements RiegoService {
 
     @Override
     public Riego create(Riego riego) {
+        if (riego.getFechaPlanificacion() == null)
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "La fecha planificada del riego es obligatoria.");
+        if (riego.getAreaCultivo() == null || riego.getAreaCultivo().getAreaCultivoPk() == null)
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "El área de cultivo del riego es obligatoria.");
         AreaCultivo areaCultivo = areaCultivoService.findById(riego.getAreaCultivo().getAreaCultivoPk());
-        if(areaCultivo == null) {
-            return null;
-        }
+        if (areaCultivo == null)
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró el área de cultivo asociada al riego.");
         riego.setAreaCultivo(areaCultivo);
         return riegoRepository.save(riego);
     }
 
     @Override
     public Riego edit(Riego riego) {
+        if (riego.getId() == null)
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "El ID del riego es obligatorio para editarlo.");
         Riego riegoDb = findById(riego.getId());
-        if(riegoDb == null) {
-            return null;
-        }
+        if (riegoDb == null)
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró el riego con ID " + riego.getId() + ".");
+        if (riego.getFechaPlanificacion() == null)
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "La fecha planificada del riego es obligatoria.");
+        if (riego.getAreaCultivo() == null || riego.getAreaCultivo().getAreaCultivoPk() == null)
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "El área de cultivo del riego es obligatoria.");
         AreaCultivo areaCultivoDb = areaCultivoService.findById(riego.getAreaCultivo().getAreaCultivoPk());
-        if(areaCultivoDb == null) {
-            return null;
-        }
+        if (areaCultivoDb == null)
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró el área de cultivo asociada al riego.");
         riegoDb.setFechaReal(riego.getFechaReal());
         riegoDb.setFechaPlanificacion(riego.getFechaPlanificacion());
         riegoDb.setAreaCultivo(areaCultivoDb);
@@ -69,9 +78,8 @@ public class RiegoServiceImpl implements RiegoService {
     @Override
     public Riego delete(long id) {
         Riego riegoDb = findById(id);
-        if(riegoDb == null) {
-            return null;
-        }
+        if (riegoDb == null)
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró el riego con ID " + id + ".");
         riegoRepository.delete(riegoDb);
         return riegoDb;
     }

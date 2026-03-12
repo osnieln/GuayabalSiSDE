@@ -2,6 +2,7 @@ package cu.edu.unah.GuayabalSiSDE.controller;
 
 import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
 import cu.edu.unah.GuayabalSiSDE.services.CultivoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -39,12 +40,12 @@ public class CultivoController {
     }
 
     @PostMapping (path = "create")
-    public ResponseEntity<Cultivo> create(@RequestBody(required = true) Cultivo cultivo){
+    public ResponseEntity<Cultivo> create(@Valid @RequestBody(required = true) Cultivo cultivo){
         return ResponseEntity.ok(cultivoService.create(cultivo));
     }
 
     @PutMapping (path = "edit")
-    public ResponseEntity<Cultivo> edit(@RequestBody(required = true) Cultivo cultivo){
+    public ResponseEntity<Cultivo> edit(@Valid @RequestBody(required = true) Cultivo cultivo){
         return ResponseEntity.ok(cultivoService.edit(cultivo));
     }
 

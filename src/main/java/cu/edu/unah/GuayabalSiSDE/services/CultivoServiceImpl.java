@@ -49,12 +49,18 @@ public class CultivoServiceImpl implements CultivoService{
 
     @Override
     public Cultivo create(@NonNull Cultivo cultivo) {
+        if (cultivo.getDescripcion() == null || cultivo.getDescripcion().isBlank())
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "La descripción del cultivo es obligatoria.");
+        if (cultivo.getProduccion() == null)
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "Debe asociar una producción al cultivo.");
+        if (cultivo.getTipoCultivo() == null)
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "Debe asociar un tipo de cultivo al cultivo.");
         Produccion produccionDb = produccionRepository.findById(cultivo.getProduccion().getId()).orElse(null);
-        if(null == cultivo.getProduccion())
-            return null;
+        if (produccionDb == null)
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró la producción con ID " + cultivo.getProduccion().getId() + ".");
         TipoCultivo tipoCultivoDb = tipoCultivoRepository.findById(cultivo.getTipoCultivo().getId()).orElse(null);
-        if(null == cultivo.getTipoCultivo())
-            return null;
+        if (tipoCultivoDb == null)
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró el tipo de cultivo con ID " + cultivo.getTipoCultivo().getId() + ".");
         cultivo.setProduccion(produccionDb);
         cultivo.setTipoCultivo(tipoCultivoDb);
         return cultivoRepository.save(cultivo);
@@ -62,16 +68,22 @@ public class CultivoServiceImpl implements CultivoService{
 
     @Override
     public Cultivo edit(@NonNull Cultivo cultivo) {
+        if (cultivo.getId() == null)
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "El ID del cultivo es obligatorio para editarlo.");
         Cultivo cultivoDb = findById(cultivo.getId());
-        if(null == cultivoDb)
-            return null;
+        if (null == cultivoDb)
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró el cultivo con ID " + cultivo.getId() + ".");
+        if (cultivo.getDescripcion() == null || cultivo.getDescripcion().isBlank())
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "La descripción del cultivo es obligatoria.");
         cultivoDb.setDescripcion(cultivo.getDescripcion());
-        if(null == cultivo.getProduccion())
-            return null;
+        if (cultivo.getProduccion() == null)
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "Debe asociar una producción al cultivo.");
         Produccion produccionDb = produccionRepository.findById(cultivo.getProduccion().getId()).orElse(null);
-        if(produccionDb==null)
-            return null;
-        TipoCultivo tipoCultivoDb = tipoCultivoRepository.findById(cultivo.getTipoCultivo().getId()).orElse(null);
+        if (produccionDb == null)
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró la producción con ID " + cultivo.getProduccion().getId() + ".");
+        TipoCultivo tipoCultivoDb = null;
+        if (cultivo.getTipoCultivo() != null)
+            tipoCultivoDb = tipoCultivoRepository.findById(cultivo.getTipoCultivo().getId()).orElse(null);
         cultivoDb.setProduccion(produccionDb);
         cultivoDb.setTipoCultivo(tipoCultivoDb);
         return cultivoRepository.save(cultivoDb);
@@ -80,8 +92,8 @@ public class CultivoServiceImpl implements CultivoService{
     @Override
     public Cultivo delete(Long id) {
         Cultivo cultivoDb = findById(id);
-        if(cultivoDb == null)
-            return null;
+        if (cultivoDb == null)
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró el cultivo con ID " + id + ".");
         cultivoRepository.delete(cultivoDb);
         return cultivoDb;
     }
