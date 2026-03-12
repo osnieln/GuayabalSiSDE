@@ -2,237 +2,167 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-              name="cultivos_por_vencer" pageWidth="842" pageHeight="595" orientation="Landscape"
-              columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              name="cultivos_por_vencer"
+              pageWidth="842" pageHeight="595" orientation="Landscape"
+              columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="15"
               whenNoDataType="AllSectionsNoDetail" isIgnorePagination="true">
 
-    <parameter name="REPORT_TITLE" class="java.lang.String">
-        <defaultValueExpression><![CDATA["CULTIVOS PRÓXIMOS A VENCER"]]></defaultValueExpression>
-    </parameter>
-    <parameter name="GENERATION_DATE" class="java.lang.String">
-        <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
-    </parameter>
-    <parameter name="TOTAL_REGISTROS" class="java.lang.String">
-        <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
-    </parameter>
-    <parameter name="FILTRO_DIAS" class="java.lang.String">
-        <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
-    </parameter>
+    <parameter name="REPORT_TITLE"   class="java.lang.String"><defaultValueExpression><![CDATA["CULTIVOS PRÓXIMOS A VENCER"]]></defaultValueExpression></parameter>
+    <parameter name="GENERATION_DATE" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+    <parameter name="TOTAL_REGISTROS" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+    <parameter name="FILTRO_DIAS"    class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 
-    <field name="area" class="java.lang.String"/>
-    <field name="cultivo" class="java.lang.String"/>
-    <field name="fechaSiembra" class="java.lang.String"/>
+    <field name="area"          class="java.lang.String"/>
+    <field name="cultivo"       class="java.lang.String"/>
+    <field name="fechaSiembra"  class="java.lang.String"/>
     <field name="fechaRecogida" class="java.lang.String"/>
-    <field name="planProd" class="java.lang.Long"/>
+    <field name="planProd"      class="java.lang.Long"/>
     <field name="produccionReal" class="java.lang.Double"/>
-    <field name="agroquimicos" class="java.lang.String"/>
+    <field name="agroquimicos"  class="java.lang.String"/>
 
-    <!-- Título -->
+    <!-- ═══════════════════════════════════════════════════════════════════ TÍTULO -->
     <title>
-        <band height="90">
+        <band height="75">
+            <!-- Franja superior naranja oscuro -->
             <rectangle>
-                <reportElement x="0" y="0" width="802" height="70" backcolor="#E65100"/>
+                <reportElement x="0" y="0" width="802" height="6" backcolor="#7E5109" forecolor="#7E5109"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
             </rectangle>
+            <!-- Fondo principal -->
+            <rectangle>
+                <reportElement x="0" y="6" width="802" height="55" backcolor="#D35400" forecolor="#D35400"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+            <!-- Nombre del sistema -->
+            <staticText>
+                <reportElement x="6" y="9" width="500" height="11" forecolor="#FDEBD0"/>
+                <textElement verticalAlignment="Middle"><font fontName="Helvetica" size="7" isItalic="true"/></textElement>
+                <text><![CDATA[Sistema de Gestión Agrícola — Cooperativa Guayabal]]></text>
+            </staticText>
+            <!-- Fecha (derecha) -->
             <textField>
-                <reportElement x="0" y="8" width="802" height="28" forecolor="#FFFFFF"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="18" isBold="true"/>
-                </textElement>
+                <reportElement x="506" y="9" width="290" height="11" forecolor="#FDEBD0"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="Helvetica" size="7"/></textElement>
+                <textFieldExpression><![CDATA[$P{GENERATION_DATE} + "  "]]></textFieldExpression>
+            </textField>
+            <!-- Título -->
+            <textField>
+                <reportElement x="0" y="22" width="802" height="24" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Helvetica-Bold" size="15" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{REPORT_TITLE}]]></textFieldExpression>
             </textField>
+            <!-- Filtro días -->
             <textField>
-                <reportElement x="0" y="38" width="400" height="16" forecolor="#FFE0B2"/>
-                <textElement textAlignment="Left" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="9" isItalic="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA["  " + $P{GENERATION_DATE}]]></textFieldExpression>
+                <reportElement x="6" y="48" width="500" height="11" forecolor="#FDFEFE"/>
+                <textElement verticalAlignment="Middle"><font fontName="Helvetica" size="7" isItalic="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{FILTRO_DIAS}]]></textFieldExpression>
             </textField>
+            <!-- Total registros -->
             <textField>
-                <reportElement x="400" y="38" width="402" height="16" forecolor="#FFE0B2"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="9" isBold="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{FILTRO_DIAS} + "  "]]></textFieldExpression>
+                <reportElement x="506" y="48" width="290" height="11" forecolor="#FDFEFE"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="Helvetica-Bold" size="7" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_REGISTROS} + "  "]]></textFieldExpression>
             </textField>
-            <textField>
-                <reportElement x="0" y="55" width="802" height="14" forecolor="#FFFFFF"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="9" isBold="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{TOTAL_REGISTROS}]]></textFieldExpression>
-            </textField>
+            <!-- Franja inferior -->
+            <rectangle>
+                <reportElement x="0" y="61" width="802" height="4" backcolor="#7E5109" forecolor="#7E5109"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+            <rectangle>
+                <reportElement x="0" y="65" width="802" height="10" backcolor="#FFFFFF" forecolor="#FFFFFF"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
         </band>
     </title>
 
-    <!-- Cabecera de columnas -->
+    <!-- ══════════════════════════════════════════════════════════ CABECERA COLUMNAS -->
     <columnHeader>
         <band height="22">
             <rectangle>
-                <reportElement x="0" y="0" width="802" height="22" backcolor="#BF360C"/>
+                <reportElement x="0" y="0" width="802" height="22" backcolor="#A04000" forecolor="#A04000"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
             </rectangle>
-            <staticText>
-                <reportElement x="0" y="3" width="150" height="16" forecolor="#FFFFFF"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="9" isBold="true"/>
-                </textElement>
-                <text><![CDATA[ÁREA]]></text>
-            </staticText>
-            <staticText>
-                <reportElement x="150" y="3" width="150" height="16" forecolor="#FFFFFF"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="9" isBold="true"/>
-                </textElement>
-                <text><![CDATA[CULTIVO]]></text>
-            </staticText>
-            <staticText>
-                <reportElement x="300" y="3" width="90" height="16" forecolor="#FFFFFF"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="9" isBold="true"/>
-                </textElement>
-                <text><![CDATA[F. SIEMBRA]]></text>
-            </staticText>
-            <staticText>
-                <reportElement x="390" y="3" width="90" height="16" forecolor="#FFFFFF"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="9" isBold="true"/>
-                </textElement>
-                <text><![CDATA[F. RECOGIDA]]></text>
-            </staticText>
-            <staticText>
-                <reportElement x="480" y="3" width="80" height="16" forecolor="#FFFFFF"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="9" isBold="true"/>
-                </textElement>
-                <text><![CDATA[PLAN (t)]]></text>
-            </staticText>
-            <staticText>
-                <reportElement x="560" y="3" width="80" height="16" forecolor="#FFFFFF"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="9" isBold="true"/>
-                </textElement>
-                <text><![CDATA[PROD. REAL (t)]]></text>
-            </staticText>
-            <staticText>
-                <reportElement x="640" y="3" width="162" height="16" forecolor="#FFFFFF"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="9" isBold="true"/>
-                </textElement>
-                <text><![CDATA[AGROQUÍMICOS]]></text>
-            </staticText>
+            <staticText><reportElement x="2"   y="3" width="158" height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Helvetica-Bold" size="8" isBold="true"/></textElement><text><![CDATA[ÁREA]]></text></staticText>
+            <staticText><reportElement x="162" y="3" width="158" height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Helvetica-Bold" size="8" isBold="true"/></textElement><text><![CDATA[CULTIVO]]></text></staticText>
+            <staticText><reportElement x="322" y="3" width="88"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Helvetica-Bold" size="8" isBold="true"/></textElement><text><![CDATA[F. SIEMBRA]]></text></staticText>
+            <staticText><reportElement x="412" y="3" width="88"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Helvetica-Bold" size="8" isBold="true"/></textElement><text><![CDATA[F. RECOGIDA ⚠]]></text></staticText>
+            <staticText><reportElement x="502" y="3" width="78"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Helvetica-Bold" size="8" isBold="true"/></textElement><text><![CDATA[PLAN (t)]]></text></staticText>
+            <staticText><reportElement x="582" y="3" width="78"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Helvetica-Bold" size="8" isBold="true"/></textElement><text><![CDATA[PROD. REAL (t)]]></text></staticText>
+            <staticText><reportElement x="662" y="3" width="140" height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Helvetica-Bold" size="8" isBold="true"/></textElement><text><![CDATA[AGROQUÍMICOS]]></text></staticText>
         </band>
     </columnHeader>
 
-    <!-- Filas de datos -->
+    <!-- ═══════════════════════════════════════════════════════════════ FILAS DATOS -->
     <detail>
-        <band height="20">
-            <printWhenExpression><![CDATA[Boolean.TRUE]]></printWhenExpression>
+        <band height="18">
             <rectangle>
-                <reportElement x="0" y="0" width="802" height="20" backcolor="#FFF3E0">
+                <reportElement x="0" y="0" width="802" height="18" backcolor="#FDEBD0" forecolor="#FDEBD0">
                     <printWhenExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></printWhenExpression>
                 </reportElement>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
             </rectangle>
             <textField isStretchWithOverflow="true" isBlankWhenNull="true">
-                <reportElement x="2" y="2" width="146" height="16"/>
-                <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="8"/>
-                </textElement>
+                <reportElement x="4"   y="2" width="154" height="14"/>
+                <textElement verticalAlignment="Middle"><font fontName="Helvetica" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$F{area}]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true" isBlankWhenNull="true">
-                <reportElement x="152" y="2" width="146" height="16"/>
-                <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="8"/>
-                </textElement>
+                <reportElement x="164" y="2" width="154" height="14"/>
+                <textElement verticalAlignment="Middle"><font fontName="Helvetica" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$F{cultivo}]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement x="302" y="2" width="86" height="16"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="8"/>
-                </textElement>
+                <reportElement x="324" y="2" width="84" height="14"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Helvetica" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$F{fechaSiembra}]]></textFieldExpression>
             </textField>
+            <!-- Fecha de recogida en rojo urgente -->
             <textField isBlankWhenNull="true">
-                <reportElement x="392" y="2" width="86" height="16" forecolor="#D84315"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="8" isBold="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{fechaRecogida}]]></textFieldExpression>
+                <reportElement x="414" y="2" width="84" height="14" forecolor="#C0392B"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="Helvetica-Bold" size="8" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$F{fechaRecogida} != null ? $F{fechaRecogida} : "-"]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement x="482" y="2" width="76" height="16"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="8"/>
-                </textElement>
+                <reportElement x="504" y="2" width="74" height="14"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="Helvetica" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$F{planProd} != null ? $F{planProd}.toString() : "-"]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement x="562" y="2" width="76" height="16"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="8"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{produccionReal} != null ? String.format("%.1f", $F{produccionReal}) : "-"]]></textFieldExpression>
+                <reportElement x="584" y="2" width="74" height="14"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="Helvetica" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$F{produccionReal} != null ? String.format("%.2f", $F{produccionReal}) : "-"]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true" isBlankWhenNull="true">
-                <reportElement x="642" y="2" width="158" height="16"/>
-                <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="7"/>
-                </textElement>
+                <reportElement x="664" y="2" width="136" height="14"/>
+                <textElement verticalAlignment="Middle"><font fontName="Helvetica" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$F{agroquimicos}]]></textFieldExpression>
             </textField>
-            <!-- Líneas verticales -->
-            <line>
-                <reportElement x="150" y="0" width="1" height="20" forecolor="#FFCCBC"/>
-                <graphicElement><pen lineWidth="0.5"/></graphicElement>
-            </line>
-            <line>
-                <reportElement x="300" y="0" width="1" height="20" forecolor="#FFCCBC"/>
-                <graphicElement><pen lineWidth="0.5"/></graphicElement>
-            </line>
-            <line>
-                <reportElement x="390" y="0" width="1" height="20" forecolor="#FFCCBC"/>
-                <graphicElement><pen lineWidth="0.5"/></graphicElement>
-            </line>
-            <line>
-                <reportElement x="480" y="0" width="1" height="20" forecolor="#FFCCBC"/>
-                <graphicElement><pen lineWidth="0.5"/></graphicElement>
-            </line>
-            <line>
-                <reportElement x="560" y="0" width="1" height="20" forecolor="#FFCCBC"/>
-                <graphicElement><pen lineWidth="0.5"/></graphicElement>
-            </line>
-            <line>
-                <reportElement x="640" y="0" width="1" height="20" forecolor="#FFCCBC"/>
-                <graphicElement><pen lineWidth="0.5"/></graphicElement>
-            </line>
-            <line>
-                <reportElement x="0" y="19" width="802" height="1" forecolor="#FFCCBC"/>
-                <graphicElement><pen lineWidth="0.5"/></graphicElement>
-            </line>
+            <!-- Separadores de columna -->
+            <line><reportElement x="160" y="0" width="1" height="18" forecolor="#D5D8DC"/><graphicElement><pen lineWidth="0.4"/></graphicElement></line>
+            <line><reportElement x="320" y="0" width="1" height="18" forecolor="#D5D8DC"/><graphicElement><pen lineWidth="0.4"/></graphicElement></line>
+            <line><reportElement x="410" y="0" width="1" height="18" forecolor="#D5D8DC"/><graphicElement><pen lineWidth="0.4"/></graphicElement></line>
+            <line><reportElement x="500" y="0" width="1" height="18" forecolor="#D5D8DC"/><graphicElement><pen lineWidth="0.4"/></graphicElement></line>
+            <line><reportElement x="580" y="0" width="1" height="18" forecolor="#D5D8DC"/><graphicElement><pen lineWidth="0.4"/></graphicElement></line>
+            <line><reportElement x="660" y="0" width="1" height="18" forecolor="#D5D8DC"/><graphicElement><pen lineWidth="0.4"/></graphicElement></line>
+            <line><reportElement x="0"   y="17" width="802" height="1" forecolor="#EDBB99"/><graphicElement><pen lineWidth="0.3"/></graphicElement></line>
         </band>
     </detail>
 
-    <!-- Pie de página -->
+    <!-- ═══════════════════════════════════════════════════════════════ PIE DE PÁGINA -->
     <pageFooter>
-        <band height="20">
-            <line>
-                <reportElement x="0" y="0" width="802" height="1" forecolor="#BF360C"/>
-                <graphicElement><pen lineWidth="0.5"/></graphicElement>
-            </line>
+        <band height="16">
+            <line><reportElement x="0" y="0" width="802" height="1" forecolor="#D35400"/><graphicElement><pen lineWidth="0.7"/></graphicElement></line>
             <staticText>
-                <reportElement x="0" y="3" width="400" height="14" forecolor="#757575"/>
-                <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="7" isItalic="true"/>
-                </textElement>
-                <text><![CDATA[  Sistema de Gestión Agrícola — Guayabal]]></text>
+                <reportElement x="2" y="3" width="500" height="11" forecolor="#7F8C8D"/>
+                <textElement verticalAlignment="Middle"><font fontName="Helvetica" size="6" isItalic="true"/></textElement>
+                <text><![CDATA[  Sistema de Gestión Agrícola — Cooperativa Guayabal  |  Documento generado automáticamente]]></text>
             </staticText>
             <textField evaluationTime="Report">
-                <reportElement x="680" y="3" width="122" height="14" forecolor="#757575"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="7"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Pág. " + $V{PAGE_NUMBER}]]></textFieldExpression>
+                <reportElement x="680" y="3" width="122" height="11" forecolor="#7F8C8D"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="Helvetica" size="6"/></textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
             </textField>
         </band>
     </pageFooter>
+
 </jasperReport>
