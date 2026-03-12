@@ -93,6 +93,6 @@ public class RiegoServiceImpl implements RiegoService {
 
     @Override
     public List<Riego> findHistorialByArea(Long areaId) {
-        return riegoRepository.findByAreaCultivo_AreaCultivoPk_AreaIdAndFechaRealIsNotNull(areaId);
+        return riegoRepository.findByAreaCultivo_AreaCultivoPk_AreaId(areaId);
     }
 }
