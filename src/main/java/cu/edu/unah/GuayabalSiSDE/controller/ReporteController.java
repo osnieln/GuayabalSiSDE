@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.core.io.ClassPathResource;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -55,7 +59,7 @@ public class ReporteController {
         } catch (Throwable e) {
             System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().contentType(MediaType.TEXT_PLAIN).body(("ERROR: " + e.getClass().getName() + ": " + e.getMessage()).getBytes());
         }
     }
 
@@ -76,7 +80,7 @@ public class ReporteController {
         } catch (Throwable e) {
             System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().contentType(MediaType.TEXT_PLAIN).body(("ERROR: " + e.getClass().getName() + ": " + e.getMessage()).getBytes());
         }
     }
 
@@ -99,7 +103,7 @@ public class ReporteController {
         } catch (Throwable e) {
             System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().contentType(MediaType.TEXT_PLAIN).body(("ERROR: " + e.getClass().getName() + ": " + e.getMessage()).getBytes());
         }
     }
 
@@ -121,7 +125,7 @@ public class ReporteController {
         } catch (Throwable e) {
             System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().contentType(MediaType.TEXT_PLAIN).body(("ERROR: " + e.getClass().getName() + ": " + e.getMessage()).getBytes());
         }
     }
 
@@ -143,7 +147,7 @@ public class ReporteController {
         } catch (Throwable e) {
             System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().contentType(MediaType.TEXT_PLAIN).body(("ERROR: " + e.getClass().getName() + ": " + e.getMessage()).getBytes());
         }
     }
 
@@ -159,7 +163,7 @@ public class ReporteController {
         } catch (Throwable e) {
             System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().contentType(MediaType.TEXT_PLAIN).body(("ERROR: " + e.getClass().getName() + ": " + e.getMessage()).getBytes());
         }
     }
 
@@ -175,7 +179,97 @@ public class ReporteController {
         } catch (Throwable e) {
             System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().contentType(MediaType.TEXT_PLAIN).body(("ERROR: " + e.getClass().getName() + ": " + e.getMessage()).getBytes());
+        }
+    }
+
+    // ── Endpoints de diagnóstico ──────────────────────────────────────────────
+
+    /**
+     * Diagnóstico completo: acceder desde el navegador con
+     * http://localhost:8081/api/reportes/diagnostico
+     * Devuelve texto plano indicando en qué paso falla la generación del PDF.
+     */
+    @GetMapping(value = "/diagnostico", produces = "text/plain;charset=UTF-8")
+    public ResponseEntity<String> diagnostico() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== DIAGNÓSTICO DE REPORTES ===\n");
+        sb.append("Fecha: ").append(new Date()).append("\n\n");
+
+        // 1. JRXML en classpath
+        try {
+            ClassPathResource r = new ClassPathResource("reportes/area_cultivo_plan_prod.jrxml");
+            sb.append("1. JRXML en classpath: ").append(r.exists() ? "ENCONTRADO (" + r.getURL() + ")" : "NO ENCONTRADO").append("\n");
+        } catch (Exception e) {
+            sb.append("1. JRXML en classpath ERROR: ").append(e).append("\n");
+        }
+
+        // 2. Compilación del JRXML
+        try {
+            ClassPathResource r = new ClassPathResource("reportes/area_cultivo_plan_prod.jrxml");
+            net.sf.jasperreports.engine.JasperReport jr =
+                    net.sf.jasperreports.engine.JasperCompileManager.compileReport(r.getInputStream());
+            sb.append("2. Compilación JRXML: OK (").append(jr.getName()).append(")\n");
+        } catch (Exception e) {
+            sb.append("2. Compilación JRXML ERROR: ").append(e.getClass().getName()).append(": ").append(e.getMessage()).append("\n");
+            if (e.getCause() != null) sb.append("   Caused by: ").append(e.getCause()).append("\n");
+        }
+
+        // 3. Consulta a la base de datos
+        int registros = 0;
+        try {
+            List<?> todos = areaCultivoService.findAll();
+            registros = todos != null ? todos.size() : 0;
+            sb.append("3. Consulta BD: OK (").append(registros).append(" registros)\n");
+        } catch (Exception e) {
+            sb.append("3. Consulta BD ERROR: ").append(e.getClass().getName()).append(": ").append(e.getMessage()).append("\n");
+        }
+
+        // 4. Generación completa del PDF
+        try {
+            byte[] pdf = reporteAreaCultivoService.exportReportAllAreasCultivo();
+            sb.append("4. Generación PDF: OK (").append(pdf.length).append(" bytes)\n");
+            sb.append("\n✓ TODO OK — el PDF se genera correctamente.\n");
+        } catch (Throwable e) {
+            sb.append("4. Generación PDF ERROR: ").append(e.getClass().getName()).append(": ").append(e.getMessage()).append("\n");
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            sb.append(sw).append("\n");
+            if (e.getCause() != null) {
+                sb.append("Caused by: ").append(e.getCause().getClass().getName()).append(": ").append(e.getCause().getMessage()).append("\n");
+            }
+        }
+
+        return ResponseEntity.ok(sb.toString());
+    }
+
+    /**
+     * Prueba OpenPDF directamente sin JasperReports.
+     * Si este endpoint devuelve un PDF válido pero /todasAreasCultivo falla,
+     * el problema es específico de JasperReports.
+     * Acceder: http://localhost:8081/api/reportes/testPdf
+     */
+    @GetMapping("/testPdf")
+    public ResponseEntity<byte[]> testPdf() {
+        try {
+            java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+            com.lowagie.text.Document doc = new com.lowagie.text.Document(com.lowagie.text.PageSize.A4);
+            com.lowagie.text.pdf.PdfWriter.getInstance(doc, baos);
+            doc.open();
+            doc.add(new com.lowagie.text.Paragraph("Test PDF - OpenPDF funciona correctamente"));
+            doc.add(new com.lowagie.text.Paragraph("Fecha: " + new Date()));
+            doc.close();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "test.pdf");
+            return ResponseEntity.ok().headers(headers).body(baos.toByteArray());
+        } catch (Throwable e) {
+            System.err.println("[ReporteController] ERROR en testPdf: " + e.getClass().getName() + ": " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError()
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .body(("ERROR: " + e.getClass().getName() + ": " + e.getMessage()).getBytes());
         }
     }
 
