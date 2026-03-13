@@ -44,31 +44,31 @@
             <!-- Nombre del sistema -->
             <staticText>
                 <reportElement x="6" y="9" width="500" height="11" forecolor="#D5F5E3"/>
-                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="7" isItalic="true"/></textElement>
+                <textElement verticalAlignment="Middle"><font fontName="DejaVu Sans" size="7" isItalic="true"/></textElement>
                 <text><![CDATA[Sistema de Gestión Agrícola — Cooperativa Guayabal]]></text>
             </staticText>
             <!-- Fecha de generación (derecha) -->
             <textField>
                 <reportElement x="506" y="9" width="290" height="11" forecolor="#D5F5E3"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="7"/></textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{GENERATION_DATE} + "  "]]></textFieldExpression>
             </textField>
             <!-- Título del reporte -->
             <textField>
                 <reportElement x="0" y="22" width="802" height="24" forecolor="#FFFFFF"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="15" isBold="true"/></textElement>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="15" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{REPORT_TITLE}]]></textFieldExpression>
             </textField>
             <!-- Filtro aplicado (izquierda) -->
             <textField>
                 <reportElement x="6" y="48" width="500" height="11" forecolor="#FDFEFE"/>
-                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="7" isItalic="true"/></textElement>
+                <textElement verticalAlignment="Middle"><font fontName="DejaVu Sans" size="7" isItalic="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{RANGO_PLAN}]]></textFieldExpression>
             </textField>
             <!-- Total registros (derecha) -->
             <textField>
                 <reportElement x="506" y="48" width="290" height="11" forecolor="#FDFEFE"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="7" isBold="true"/></textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{TOTAL_REGISTROS} + "  "]]></textFieldExpression>
             </textField>
             <!-- Franja inferior de acento -->
@@ -91,15 +91,15 @@
                 <reportElement x="0" y="0" width="802" height="22" backcolor="#1E8449" forecolor="#1E8449"/>
                 <graphicElement><pen lineWidth="0"/></graphicElement>
             </rectangle>
-            <staticText><reportElement x="2"   y="3" width="138" height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement><text><![CDATA[ÁREA]]></text></staticText>
-            <staticText><reportElement x="142" y="3" width="138" height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement><text><![CDATA[CULTIVO]]></text></staticText>
-            <staticText><reportElement x="282" y="3" width="74"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement><text><![CDATA[F. SIEMBRA]]></text></staticText>
-            <staticText><reportElement x="358" y="3" width="74"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement><text><![CDATA[F. RECOGIDA]]></text></staticText>
-            <staticText><reportElement x="434" y="3" width="66"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement><text><![CDATA[PLAN (t)]]></text></staticText>
-            <staticText><reportElement x="502" y="3" width="66"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement><text><![CDATA[REAL (t)]]></text></staticText>
-            <staticText><reportElement x="570" y="3" width="66"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement><text><![CDATA[PERM. (t)]]></text></staticText>
-            <staticText><reportElement x="638" y="3" width="66"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement><text><![CDATA[TEMP. (t)]]></text></staticText>
-            <staticText><reportElement x="706" y="3" width="96"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement><text><![CDATA[AGROQUÍMICOS]]></text></staticText>
+            <staticText><reportElement x="2"   y="3" width="138" height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement><text><![CDATA[ÁREA]]></text></staticText>
+            <staticText><reportElement x="142" y="3" width="138" height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement><text><![CDATA[CULTIVO]]></text></staticText>
+            <staticText><reportElement x="282" y="3" width="74"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement><text><![CDATA[F. SIEMBRA]]></text></staticText>
+            <staticText><reportElement x="358" y="3" width="74"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement><text><![CDATA[F. RECOGIDA]]></text></staticText>
+            <staticText><reportElement x="434" y="3" width="66"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement><text><![CDATA[PLAN (t)]]></text></staticText>
+            <staticText><reportElement x="502" y="3" width="66"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement><text><![CDATA[REAL (t)]]></text></staticText>
+            <staticText><reportElement x="570" y="3" width="66"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement><text><![CDATA[PERM. (t)]]></text></staticText>
+            <staticText><reportElement x="638" y="3" width="66"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement><text><![CDATA[TEMP. (t)]]></text></staticText>
+            <staticText><reportElement x="706" y="3" width="96"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement><text><![CDATA[AGROQUÍMICOS]]></text></staticText>
         </band>
     </columnHeader>
 
@@ -116,47 +116,47 @@
             <!-- Datos -->
             <textField isStretchWithOverflow="true" isBlankWhenNull="true">
                 <reportElement x="4"   y="2" width="134" height="14"/>
-                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="7"/></textElement>
+                <textElement verticalAlignment="Middle"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$F{areaId}]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true" isBlankWhenNull="true">
                 <reportElement x="144" y="2" width="134" height="14"/>
-                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="7"/></textElement>
+                <textElement verticalAlignment="Middle"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$F{cultivoId}]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
                 <reportElement x="284" y="2" width="70" height="14"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="7"/></textElement>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$F{fechaSiembra}]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
                 <reportElement x="360" y="2" width="70" height="14"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="7"/></textElement>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$F{fechaRecogida} != null ? $F{fechaRecogida} : "-"]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
                 <reportElement x="436" y="2" width="62" height="14"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="7"/></textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$F{planProd} != null ? $F{planProd}.toString() : "-"]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
                 <reportElement x="504" y="2" width="62" height="14"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="7"/></textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$F{produccionReal} != null ? String.format("%.2f", $F{produccionReal}) : "-"]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
                 <reportElement x="572" y="2" width="62" height="14"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="7"/></textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$F{prodCultivosPermanente} != null ? String.format("%.2f", $F{prodCultivosPermanente}) : "-"]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
                 <reportElement x="640" y="2" width="62" height="14"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="7"/></textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$F{prodCultivosTemporales} != null ? String.format("%.2f", $F{prodCultivosTemporales}) : "-"]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true" isBlankWhenNull="true">
                 <reportElement x="708" y="2" width="92" height="14"/>
-                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="6"/></textElement>
+                <textElement verticalAlignment="Middle"><font fontName="DejaVu Sans" size="6"/></textElement>
                 <textFieldExpression><![CDATA[$F{agroquimicos}]]></textFieldExpression>
             </textField>
             <!-- Separadores verticales de columna -->
@@ -182,27 +182,27 @@
             </rectangle>
             <staticText>
                 <reportElement x="2" y="7" width="430" height="14" forecolor="#145A32"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement>
                 <text><![CDATA[TOTALES:    ]]></text>
             </staticText>
             <textField>
                 <reportElement x="434" y="7" width="64" height="14" forecolor="#145A32"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[$V{TOTAL_PLAN}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="502" y="7" width="64" height="14" forecolor="#145A32"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[String.format("%.2f", $V{TOTAL_REAL})]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="570" y="7" width="64" height="14" forecolor="#145A32"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[String.format("%.2f", $V{TOTAL_PERMANENTE})]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="638" y="7" width="64" height="14" forecolor="#145A32"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="8" isBold="true"/></textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="8" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[String.format("%.2f", $V{TOTAL_TEMPORAL})]]></textFieldExpression>
             </textField>
         </band>
@@ -214,12 +214,12 @@
             <line><reportElement x="0" y="0" width="802" height="1" forecolor="#27AE60"/><graphicElement><pen lineWidth="0.7"/></graphicElement></line>
             <staticText>
                 <reportElement x="2" y="3" width="500" height="11" forecolor="#7F8C8D"/>
-                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="6" isItalic="true"/></textElement>
+                <textElement verticalAlignment="Middle"><font fontName="DejaVu Sans" size="6" isItalic="true"/></textElement>
                 <text><![CDATA[  Sistema de Gestión Agrícola — Cooperativa Guayabal  |  Documento generado automáticamente]]></text>
             </staticText>
             <textField evaluationTime="Report">
                 <reportElement x="680" y="3" width="122" height="11" forecolor="#7F8C8D"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="6"/></textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="DejaVu Sans" size="6"/></textElement>
                 <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
             </textField>
         </band>

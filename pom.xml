@@ -21,6 +21,19 @@
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<version>6.20.0</version>
+			<exclusions>
+				<!-- Excluir iText del JasperSoft para evitar conflicto de clases con OpenPDF -->
+				<exclusion>
+					<groupId>com.lowagie</groupId>
+					<artifactId>itext</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- Fuentes DejaVu registradas para JasperReports: evita dependencia de fuentes del sistema -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>6.20.0</version>
 		</dependency>
 		<!-- OpenPDF: fork mantenido de iText 2.1.7, compatible con JasperReports 6.x
 		     y con los mismos package names (com.lowagie.text.*) -->

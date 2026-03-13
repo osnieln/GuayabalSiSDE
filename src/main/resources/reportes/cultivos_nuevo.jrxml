@@ -54,7 +54,7 @@
                         <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
                     </reportElement>
                     <textElement verticalAlignment="Middle">
-                        <font fontName="SansSerif" size="12" isBold="true"/>
+                        <font fontName="DejaVu Sans" size="12" isBold="true"/>
                     </textElement>
                     <text><![CDATA[Cultivo #]]></text>
                 </staticText>
@@ -63,7 +63,7 @@
                         <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
                     </reportElement>
                     <textElement textAlignment="Left" verticalAlignment="Middle">
-                        <font fontName="SansSerif" size="12" isBold="true"/>
+                        <font fontName="DejaVu Sans" size="12" isBold="true"/>
                     </textElement>
                     <textFieldExpression><![CDATA[String.valueOf($F{id})]]></textFieldExpression>
                 </textField>
@@ -107,7 +107,7 @@
                     <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
                 </reportElement>
                 <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="10" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Descripción:]]></text>
             </staticText>
@@ -116,7 +116,7 @@
                     <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
                 </reportElement>
                 <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10"/>
+                    <font fontName="DejaVu Sans" size="10"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
             </textField>
@@ -135,7 +135,7 @@
                     <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
                 </reportElement>
                 <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="10" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Tipo de Cultivo:]]></text>
             </staticText>
@@ -144,7 +144,7 @@
                     <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
                 </reportElement>
                 <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10"/>
+                    <font fontName="DejaVu Sans" size="10"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{tipoCultivoNombre}]]></textFieldExpression>
             </textField>
@@ -163,7 +163,7 @@
                     <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
                 </reportElement>
                 <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="10" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Producción:]]></text>
             </staticText>
@@ -172,7 +172,7 @@
                     <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
                 </reportElement>
                 <textElement verticalAlignment="Middle">
-                    <font fontName="SansSerif" size="10"/>
+                    <font fontName="DejaVu Sans" size="10"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{produccionDescripcion}]]></textFieldExpression>
             </textField>

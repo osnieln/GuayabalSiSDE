@@ -52,7 +52,8 @@ public class ReporteController {
                     .headers(headers)
                     .body(reporte);
 
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
@@ -72,7 +73,8 @@ public class ReporteController {
                     .headers(headers)
                     .body(reporte);
 
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
@@ -94,7 +96,8 @@ public class ReporteController {
                     .headers(headers)
                     .body(reporte);
 
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
@@ -115,7 +118,8 @@ public class ReporteController {
                     .headers(headers)
                     .body(reporte);
 
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
@@ -136,7 +140,8 @@ public class ReporteController {
                     .headers(headers)
                     .body(reporte);
 
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
@@ -151,7 +156,8 @@ public class ReporteController {
             headers.setContentDispositionFormData("attachment", "cultivos_por_vencer.pdf");
             headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
             return ResponseEntity.ok().headers(headers).body(reporte);
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
@@ -166,7 +172,8 @@ public class ReporteController {
             headers.setContentDispositionFormData("attachment", "agroquimicos_mas_usados.pdf");
             headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
             return ResponseEntity.ok().headers(headers).body(reporte);
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            System.err.println("[ReporteController] ERROR generando reporte: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
