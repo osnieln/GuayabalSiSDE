@@ -45,7 +45,7 @@
             <staticText>
                 <reportElement x="6" y="9" width="500" height="11" forecolor="#D5F5E3"/>
                 <textElement verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7" isItalic="true"/></textElement>
-                <text><![CDATA[Sistema de Gestión Agrícola — Cooperativa Guayabal]]></text>
+                <text><![CDATA[Sistema de Gestión Agrícola — Granja El Guayabal]]></text>
             </staticText>
             <!-- Fecha de generación (derecha) -->
             <textField>
@@ -196,7 +196,7 @@
             <staticText>
                 <reportElement x="2" y="3" width="500" height="11" forecolor="#7F8C8D"/>
                 <textElement verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="6" isItalic="true"/></textElement>
-                <text><![CDATA[  Sistema de Gestión Agrícola — Cooperativa Guayabal  |  Documento generado automáticamente]]></text>
+                <text><![CDATA[  Sistema de Gestión Agrícola — Granja El Guayabal  |  Documento generado automáticamente]]></text>
             </staticText>
             <textField evaluationTime="Report">
                 <reportElement x="680" y="3" width="122" height="11" forecolor="#7F8C8D"/>
