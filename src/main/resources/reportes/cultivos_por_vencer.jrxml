@@ -22,7 +22,7 @@
 
     <!-- ═══════════════════════════════════════════════════════════════════ TÍTULO -->
     <title>
-        <band height="75">
+        <band height="90">
             <!-- Franja superior naranja oscuro -->
             <rectangle>
                 <reportElement x="0" y="0" width="802" height="6" backcolor="#7E5109" forecolor="#7E5109"/>
@@ -30,7 +30,7 @@
             </rectangle>
             <!-- Fondo principal -->
             <rectangle>
-                <reportElement x="0" y="6" width="802" height="55" backcolor="#D35400" forecolor="#D35400"/>
+                <reportElement x="0" y="6" width="802" height="70" backcolor="#D35400" forecolor="#D35400"/>
                 <graphicElement><pen lineWidth="0"/></graphicElement>
             </rectangle>
             <!-- Nombre del sistema -->
@@ -45,31 +45,47 @@
                 <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{GENERATION_DATE} + "  "]]></textFieldExpression>
             </textField>
+            <!-- Separador horizontal tenue -->
+            <line>
+                <reportElement x="6" y="22" width="790" height="1" forecolor="#EDBB99"/>
+                <graphicElement><pen lineWidth="0.4"/></graphicElement>
+            </line>
             <!-- Título -->
             <textField>
-                <reportElement x="0" y="22" width="802" height="24" forecolor="#FFFFFF"/>
+                <reportElement x="0" y="24" width="802" height="24" forecolor="#FFFFFF"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="15" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{REPORT_TITLE}]]></textFieldExpression>
             </textField>
+            <!-- Separador inferior del título -->
+            <line>
+                <reportElement x="6" y="49" width="790" height="1" forecolor="#EDBB99"/>
+                <graphicElement><pen lineWidth="0.4"/></graphicElement>
+            </line>
+            <!-- Etiqueta "Filtro:" -->
+            <staticText>
+                <reportElement x="6" y="52" width="55" height="12" forecolor="#FDEBD0"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7" isBold="true"/></textElement>
+                <text><![CDATA[Filtro:]]></text>
+            </staticText>
             <!-- Filtro días -->
             <textField>
-                <reportElement x="6" y="48" width="500" height="11" forecolor="#FDFEFE"/>
+                <reportElement x="62" y="52" width="500" height="12" forecolor="#FDFEFE"/>
                 <textElement verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7" isItalic="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{FILTRO_DIAS}]]></textFieldExpression>
             </textField>
             <!-- Total registros -->
             <textField>
-                <reportElement x="506" y="48" width="290" height="11" forecolor="#FDFEFE"/>
+                <reportElement x="564" y="52" width="232" height="12" forecolor="#FDFEFE"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{TOTAL_REGISTROS} + "  "]]></textFieldExpression>
             </textField>
             <!-- Franja inferior -->
             <rectangle>
-                <reportElement x="0" y="61" width="802" height="4" backcolor="#7E5109" forecolor="#7E5109"/>
+                <reportElement x="0" y="76" width="802" height="4" backcolor="#7E5109" forecolor="#7E5109"/>
                 <graphicElement><pen lineWidth="0"/></graphicElement>
             </rectangle>
             <rectangle>
-                <reportElement x="0" y="65" width="802" height="10" backcolor="#FFFFFF" forecolor="#FFFFFF"/>
+                <reportElement x="0" y="80" width="802" height="10" backcolor="#FFFFFF" forecolor="#FFFFFF"/>
                 <graphicElement><pen lineWidth="0"/></graphicElement>
             </rectangle>
         </band>

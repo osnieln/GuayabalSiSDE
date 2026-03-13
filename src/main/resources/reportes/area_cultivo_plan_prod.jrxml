@@ -30,15 +30,15 @@
 
     <!-- ═══════════════════════════════════════════════════════════════════ TÍTULO -->
     <title>
-        <band height="75">
+        <band height="90">
             <!-- Franja superior de acento -->
             <rectangle>
                 <reportElement x="0" y="0" width="802" height="6" backcolor="#1A5E30" forecolor="#1A5E30"/>
-                <graphicElement><pen lineWidth="0"/>    </graphicElement>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
             </rectangle>
             <!-- Fondo principal del encabezado -->
             <rectangle>
-                <reportElement x="0" y="6" width="802" height="55" backcolor="#27AE60" forecolor="#27AE60"/>
+                <reportElement x="0" y="6" width="802" height="70" backcolor="#27AE60" forecolor="#27AE60"/>
                 <graphicElement><pen lineWidth="0"/></graphicElement>
             </rectangle>
             <!-- Nombre del sistema -->
@@ -53,32 +53,48 @@
                 <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{GENERATION_DATE} + "  "]]></textFieldExpression>
             </textField>
+            <!-- Separador horizontal tenue -->
+            <line>
+                <reportElement x="6" y="22" width="790" height="1" forecolor="#A9DFBF"/>
+                <graphicElement><pen lineWidth="0.4"/></graphicElement>
+            </line>
             <!-- Título del reporte -->
             <textField>
-                <reportElement x="0" y="22" width="802" height="24" forecolor="#FFFFFF"/>
+                <reportElement x="0" y="24" width="802" height="24" forecolor="#FFFFFF"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="15" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{REPORT_TITLE}]]></textFieldExpression>
             </textField>
-            <!-- Filtro aplicado (izquierda) -->
+            <!-- Separador inferior del título -->
+            <line>
+                <reportElement x="6" y="49" width="790" height="1" forecolor="#A9DFBF"/>
+                <graphicElement><pen lineWidth="0.4"/></graphicElement>
+            </line>
+            <!-- Etiqueta "Filtro:" -->
+            <staticText>
+                <reportElement x="6" y="52" width="55" height="12" forecolor="#A9DFBF"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7" isBold="true"/></textElement>
+                <text><![CDATA[Filtro:]]></text>
+            </staticText>
+            <!-- Filtro aplicado -->
             <textField>
-                <reportElement x="6" y="48" width="500" height="11" forecolor="#FDFEFE"/>
+                <reportElement x="62" y="52" width="500" height="12" forecolor="#FDFEFE"/>
                 <textElement verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7" isItalic="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{RANGO_PLAN}]]></textFieldExpression>
             </textField>
             <!-- Total registros (derecha) -->
             <textField>
-                <reportElement x="506" y="48" width="290" height="11" forecolor="#FDFEFE"/>
+                <reportElement x="564" y="52" width="232" height="12" forecolor="#FDFEFE"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{TOTAL_REGISTROS} + "  "]]></textFieldExpression>
             </textField>
             <!-- Franja inferior de acento -->
             <rectangle>
-                <reportElement x="0" y="61" width="802" height="4" backcolor="#1A5E30" forecolor="#1A5E30"/>
+                <reportElement x="0" y="76" width="802" height="4" backcolor="#1A5E30" forecolor="#1A5E30"/>
                 <graphicElement><pen lineWidth="0"/></graphicElement>
             </rectangle>
             <!-- Espacio blanco inferior -->
             <rectangle>
-                <reportElement x="0" y="65" width="802" height="10" backcolor="#FFFFFF" forecolor="#FFFFFF"/>
+                <reportElement x="0" y="80" width="802" height="10" backcolor="#FFFFFF" forecolor="#FFFFFF"/>
                 <graphicElement><pen lineWidth="0"/></graphicElement>
             </rectangle>
         </band>

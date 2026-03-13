@@ -82,10 +82,10 @@ public class ReporteAreaCultivoService {
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(areasCultivoData);
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("REPORT_TITLE", "INFORME DE ÁREAS DE CULTIVO");
+        parameters.put("REPORT_TITLE", "ÁREAS DE CULTIVO — POR PLAN DE PRODUCCIÓN");
         parameters.put("GENERATION_DATE", "Generado el: " + dateFormat.format(new Date()));
         parameters.put("TOTAL_REGISTROS", "Total de registros: " + areasCultivo.size());
-        parameters.put("RANGO_PLAN", "Rango de producción: " + planProdInicio + " - " + planProdFin);
+        parameters.put("RANGO_PLAN", "Plan de producción entre " + planProdInicio + " t y " + planProdFin + " t");
         
         // Configuración adicional para el reporte
         parameters.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
@@ -115,10 +115,10 @@ public class ReporteAreaCultivoService {
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(areasCultivoData);
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("REPORT_TITLE", "INFORME DE ÁREAS DE CULTIVO");
+        parameters.put("REPORT_TITLE", "ÁREAS DE CULTIVO — PRODUCCIÓN PERMANENTE");
         parameters.put("GENERATION_DATE", "Generado el: " + dateFormat.format(new Date()));
         parameters.put("TOTAL_REGISTROS", "Total de registros: " + areasCultivo.size());
-        parameters.put("RANGO_PLAN", "Producción de cultivos permanentes mayor de: " + prodCultivosPermanente);
+        parameters.put("RANGO_PLAN", "Producción permanente mayor de " + prodCultivosPermanente + " t");
 
         // Configuración adicional para el reporte
         parameters.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
@@ -148,10 +148,10 @@ public class ReporteAreaCultivoService {
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(areasCultivoData);
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("REPORT_TITLE", "INFORME DE ÁREAS DE CULTIVO");
+        parameters.put("REPORT_TITLE", "ÁREAS DE CULTIVO — FILTRO POR FECHA DE RECOGIDA");
         parameters.put("GENERATION_DATE", "Generado el: " + dateFormat.format(new Date()));
         parameters.put("TOTAL_REGISTROS", "Total de registros: " + areasCultivo.size());
-        parameters.put("RANGO_PLAN", "Fecha de recogida antes de: " + fechaRecogida);
+        parameters.put("RANGO_PLAN", "Fecha de recogida anterior a: " + fechaRecogida);
 
         // Configuración adicional para el reporte
         parameters.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
