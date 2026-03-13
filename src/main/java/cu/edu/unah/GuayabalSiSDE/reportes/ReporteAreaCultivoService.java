@@ -70,9 +70,7 @@ public class ReporteAreaCultivoService {
                 .findAreaCultivoByPlanProdBetween(planProdInicio, planProdFin)
                 .getBody();
 
-        if (areasCultivo == null || areasCultivo.isEmpty()) {
-            throw new RuntimeException("No se encontraron áreas de cultivo para el rango de producción especificado");
-        }
+        if (areasCultivo == null) areasCultivo = java.util.Collections.emptyList();
 
         JasperReport jasperReport = JasperCompileManager.compileReport(
                 new ClassPathResource("reportes/area_cultivo_plan_prod.jrxml").getInputStream());
@@ -105,9 +103,7 @@ public class ReporteAreaCultivoService {
                 .findAreaCultivoByProdCultivosPermanenteAfter(prodCultivosPermanente)
                 .getBody();
 
-        if (areasCultivo == null || areasCultivo.isEmpty()) {
-            throw new RuntimeException("No se encontraron áreas de cultivo para el rango de producción especificado");
-        }
+        if (areasCultivo == null) areasCultivo = java.util.Collections.emptyList();
 
         JasperReport jasperReport = JasperCompileManager.compileReport(
                 new ClassPathResource("reportes/area_cultivo_plan_prod.jrxml").getInputStream());
@@ -140,9 +136,7 @@ public class ReporteAreaCultivoService {
                 .findAreaCultivoByFechaRecogidaBefore(fechaRecogida)
                 .getBody();
 
-        if (areasCultivo == null || areasCultivo.isEmpty()) {
-            throw new RuntimeException("No se encontraron áreas de cultivo para el rango de producción especificado");
-        }
+        if (areasCultivo == null) areasCultivo = java.util.Collections.emptyList();
 
         JasperReport jasperReport = JasperCompileManager.compileReport(
                 new ClassPathResource("reportes/area_cultivo_plan_prod.jrxml").getInputStream());
