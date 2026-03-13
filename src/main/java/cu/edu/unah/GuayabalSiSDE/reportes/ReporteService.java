@@ -9,7 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import cu.edu.unah.GuayabalSiSDE.services.CultivoService;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,7 +22,7 @@ public class ReporteService {
     
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    public byte[] exportReport() throws FileNotFoundException, JRException {
+    public byte[] exportReport() throws IOException, JRException {
         // Obtener la lista de cultivos con sus relaciones
         List<Cultivo> cultivos = cultivoService.findAll();
         

@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +33,7 @@ public class ReporteAreaCultivoService {
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    public byte[] exportReportAllAreasCultivo() throws FileNotFoundException, JRException {
+    public byte[] exportReportAllAreasCultivo() throws IOException, JRException {
         List<AreaCultivo> todos = areaCultivoService.findAll();
 
         if (todos == null || todos.isEmpty()) {
@@ -64,7 +64,7 @@ public class ReporteAreaCultivoService {
         return JasperExportManager.exportReportToPdf(jasperPrint);
     }
 
-    public byte[] exportReportByPlanProdBetween(Long planProdInicio, Long planProdFin) throws FileNotFoundException, JRException {
+    public byte[] exportReportByPlanProdBetween(Long planProdInicio, Long planProdFin) throws IOException, JRException {
         // Obtener los datos del controlador
         List<AreaCultivoResponseReport> areasCultivo = areaCultivoController
                 .findAreaCultivoByPlanProdBetween(planProdInicio, planProdFin)
@@ -99,7 +99,7 @@ public class ReporteAreaCultivoService {
         return JasperExportManager.exportReportToPdf(jasperPrint);
     }
 
-    public byte[] exportReportFindByProdCultivosPermanenteAfter(Double prodCultivosPermanente) throws FileNotFoundException, JRException {
+    public byte[] exportReportFindByProdCultivosPermanenteAfter(Double prodCultivosPermanente) throws IOException, JRException {
         // Obtener los datos del controlador
         List<AreaCultivoResponseReport> areasCultivo = areaCultivoController
                 .findAreaCultivoByProdCultivosPermanenteAfter(prodCultivosPermanente)
@@ -134,7 +134,7 @@ public class ReporteAreaCultivoService {
         return JasperExportManager.exportReportToPdf(jasperPrint);
     }
 
-    public byte[] exportReportFindByFechaRecogidaBefore(String fechaRecogida) throws FileNotFoundException, JRException {
+    public byte[] exportReportFindByFechaRecogidaBefore(String fechaRecogida) throws IOException, JRException {
         // Obtener los datos del controlador
         List<AreaCultivoResponseReport> areasCultivo = areaCultivoController
                 .findAreaCultivoByFechaRecogidaBefore(fechaRecogida)
@@ -191,7 +191,7 @@ public class ReporteAreaCultivoService {
         return datos;
     }
 
-    public byte[] exportReportCultivosPorVencer(int dias) throws FileNotFoundException, JRException {
+    public byte[] exportReportCultivosPorVencer(int dias) throws IOException, JRException {
         List<AreaCultivo> cultivos = areaCultivoService.findCultivosPorVencer(dias);
 
         List<AreaCultivoResponseReport> data = (cultivos != null)
@@ -226,7 +226,7 @@ public class ReporteAreaCultivoService {
         return JasperExportManager.exportReportToPdf(jasperPrint);
     }
 
-    public byte[] exportReportAgroquimicosMasUsados() throws FileNotFoundException, JRException {
+    public byte[] exportReportAgroquimicosMasUsados() throws IOException, JRException {
         List<AgroquimicoReporteResponse> agroquimicos = agroquimicoService.findMasUtilizadosConConteo();
 
         JasperReport jasperReport = JasperCompileManager.compileReport(
