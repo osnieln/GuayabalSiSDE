@@ -11,10 +11,9 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.JRParameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -45,8 +44,8 @@ public class ReporteAreaCultivoService {
                 .map(AreaCultivoResponseReport::map)
                 .collect(Collectors.toList());
 
-        File file = ResourceUtils.getFile("classpath:reportes/area_cultivo_plan_prod.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+        JasperReport jasperReport = JasperCompileManager.compileReport(
+                new ClassPathResource("reportes/area_cultivo_plan_prod.jrxml").getInputStream());
 
         List<Map<String, Object>> data = areasCultivo.stream()
                 .map(this::crearDatosAreaCultivo)
@@ -75,21 +74,15 @@ public class ReporteAreaCultivoService {
             throw new RuntimeException("No se encontraron áreas de cultivo para el rango de producción especificado");
         }
 
-        // Cargar el archivo .jrxml
-        File file = ResourceUtils.getFile("classpath:reportes/area_cultivo_plan_prod.jrxml");
-        
-        // Compilar el reporte
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-        
-        // Crear una lista de mapas con los datos formateados
+        JasperReport jasperReport = JasperCompileManager.compileReport(
+                new ClassPathResource("reportes/area_cultivo_plan_prod.jrxml").getInputStream());
+
         List<Map<String, Object>> areasCultivoData = areasCultivo.stream()
                 .map(this::crearDatosAreaCultivo)
                 .collect(Collectors.toList());
-        
-        // Crear el datasource a partir de la lista
+
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(areasCultivoData);
-        
-        // Parámetros del reporte
+
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("REPORT_TITLE", "INFORME DE ÁREAS DE CULTIVO");
         parameters.put("GENERATION_DATE", "Generado el: " + dateFormat.format(new Date()));
@@ -116,21 +109,15 @@ public class ReporteAreaCultivoService {
             throw new RuntimeException("No se encontraron áreas de cultivo para el rango de producción especificado");
         }
 
-        // Cargar el archivo .jrxml
-        File file = ResourceUtils.getFile("classpath:reportes/area_cultivo_plan_prod.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(
+                new ClassPathResource("reportes/area_cultivo_plan_prod.jrxml").getInputStream());
 
-        // Compilar el reporte
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-
-        // Crear una lista de mapas con los datos formateados
         List<Map<String, Object>> areasCultivoData = areasCultivo.stream()
                 .map(this::crearDatosAreaCultivo)
                 .collect(Collectors.toList());
 
-        // Crear el datasource a partir de la lista
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(areasCultivoData);
 
-        // Parámetros del reporte
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("REPORT_TITLE", "INFORME DE ÁREAS DE CULTIVO");
         parameters.put("GENERATION_DATE", "Generado el: " + dateFormat.format(new Date()));
@@ -157,21 +144,15 @@ public class ReporteAreaCultivoService {
             throw new RuntimeException("No se encontraron áreas de cultivo para el rango de producción especificado");
         }
 
-        // Cargar el archivo .jrxml
-        File file = ResourceUtils.getFile("classpath:reportes/area_cultivo_plan_prod.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(
+                new ClassPathResource("reportes/area_cultivo_plan_prod.jrxml").getInputStream());
 
-        // Compilar el reporte
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-
-        // Crear una lista de mapas con los datos formateados
         List<Map<String, Object>> areasCultivoData = areasCultivo.stream()
                 .map(this::crearDatosAreaCultivo)
                 .collect(Collectors.toList());
 
-        // Crear el datasource a partir de la lista
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(areasCultivoData);
 
-        // Parámetros del reporte
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("REPORT_TITLE", "INFORME DE ÁREAS DE CULTIVO");
         parameters.put("GENERATION_DATE", "Generado el: " + dateFormat.format(new Date()));
@@ -217,8 +198,8 @@ public class ReporteAreaCultivoService {
                 ? cultivos.stream().map(AreaCultivoResponseReport::map).collect(Collectors.toList())
                 : java.util.Collections.emptyList();
 
-        File file = ResourceUtils.getFile("classpath:reportes/cultivos_por_vencer.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+        JasperReport jasperReport = JasperCompileManager.compileReport(
+                new ClassPathResource("reportes/cultivos_por_vencer.jrxml").getInputStream());
 
         List<Map<String, Object>> rows = data.stream().map(ac -> {
             Map<String, Object> d = new HashMap<>();
@@ -248,8 +229,8 @@ public class ReporteAreaCultivoService {
     public byte[] exportReportAgroquimicosMasUsados() throws FileNotFoundException, JRException {
         List<AgroquimicoReporteResponse> agroquimicos = agroquimicoService.findMasUtilizadosConConteo();
 
-        File file = ResourceUtils.getFile("classpath:reportes/agroquimicos_reporte.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+        JasperReport jasperReport = JasperCompileManager.compileReport(
+                new ClassPathResource("reportes/agroquimicos_reporte.jrxml").getInputStream());
 
         List<Map<String, Object>> rows = agroquimicos.stream().map(ag -> {
             Map<String, Object> d = new HashMap<>();

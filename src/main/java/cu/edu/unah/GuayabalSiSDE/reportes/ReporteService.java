@@ -5,11 +5,10 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.JRParameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import cu.edu.unah.GuayabalSiSDE.services.CultivoService;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -27,11 +26,9 @@ public class ReporteService {
         // Obtener la lista de cultivos con sus relaciones
         List<Cultivo> cultivos = cultivoService.findAll();
         
-        // Cargar el archivo .jrxml
-        File file = ResourceUtils.getFile("classpath:reportes/cultivos_nuevo.jrxml");
-        
-        // Compilar el reporte
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+        // Cargar el archivo .jrxml desde el classpath (funciona en JAR empaquetado)
+        JasperReport jasperReport = JasperCompileManager.compileReport(
+                new ClassPathResource("reportes/cultivos_nuevo.jrxml").getInputStream());
         
         // Crear una lista de mapas con los datos formateados
         List<Map<String, Object>> cultivosData = cultivos.stream()
