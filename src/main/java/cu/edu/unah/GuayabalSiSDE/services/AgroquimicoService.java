@@ -22,4 +22,6 @@ public interface AgroquimicoService {
     List<Agroquimico> findMasUtilizados();
 
     List<AgroquimicoReporteResponse> findMasUtilizadosConConteo();
+
+    List<Agroquimico> findBajoStock();
 }

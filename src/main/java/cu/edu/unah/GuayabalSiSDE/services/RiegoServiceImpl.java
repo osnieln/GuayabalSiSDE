@@ -95,4 +95,10 @@ public class RiegoServiceImpl implements RiegoService {
     public List<Riego> findHistorialByArea(Long areaId) {
         return riegoRepository.findByAreaCultivo_AreaCultivoPk_AreaId(areaId);
     }
+
+    @Override
+    public List<AreaCultivo> findAreasSinRiego(int dias) {
+        Date limite = Date.valueOf(LocalDate.now().minusDays(dias));
+        return riegoRepository.findAreasSinRiegoDesde(limite);
+    }
 }

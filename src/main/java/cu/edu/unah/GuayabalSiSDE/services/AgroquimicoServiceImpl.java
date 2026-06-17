@@ -86,6 +86,9 @@ public class AgroquimicoServiceImpl implements AgroquimicoService {
         if (agroquimicoDb == null)
             throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró el agroquímico con nombre \"" + agroquimico.getNombre() + "\".");
 
+        agroquimicoDb.setStockActual(agroquimico.getStockActual());
+        agroquimicoDb.setStockMinimo(agroquimico.getStockMinimo());
+
         // Obtener las áreas de cultivo actuales
         List<AreaCultivo> areasActuales = new ArrayList<>(agroquimicoDb.getAreaCultivos());
 
@@ -148,5 +151,14 @@ public class AgroquimicoServiceImpl implements AgroquimicoService {
                 .totalCultivos(((Number) row[2]).intValue())
                 .build()
         ).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Agroquimico> findBajoStock() {
+        return agroquimicoRepository.findAll().stream()
+                .filter(a -> a.getStockActual() != null && a.getStockMinimo() != null)
+                .filter(a -> a.getStockActual() <= a.getStockMinimo())
+                .collect(Collectors.toList());
     }
 }

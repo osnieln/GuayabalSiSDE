@@ -1,7 +1,9 @@
 package cu.edu.unah.GuayabalSiSDE.controller;
 
+import cu.edu.unah.GuayabalSiSDE.entity.Agroquimico;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.Riego;
+import cu.edu.unah.GuayabalSiSDE.services.AgroquimicoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaCultivoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaService;
 import cu.edu.unah.GuayabalSiSDE.services.RiegoService;
@@ -28,6 +30,9 @@ public class DashboardController {
     @Autowired
     RiegoService riegoService;
 
+    @Autowired
+    AgroquimicoService agroquimicoService;
+
     @GetMapping
     public ResponseEntity<DashboardResponse> getDashboard() {
         long totalAreas = areaService.findAll().size();
@@ -37,6 +42,10 @@ public class DashboardController {
 
         List<Riego> riegosProximos = riegoService.findRiegosProximos(7);
         long totalRiegosProximosSemana = riegosProximos.size();
+
+        long alertasActivas = areaCultivoService.findCultivosPorVencer(7).size()
+                + riegoService.findAreasSinRiego(7).size()
+                + agroquimicoService.findBajoStock().size();
 
         int mesActual = LocalDate.now().getMonthValue();
         int anioActual = LocalDate.now().getYear();
@@ -54,6 +63,7 @@ public class DashboardController {
                 .cultivosActivos(totalCultivosActivos)
                 .riegosProximosSemana(totalRiegosProximosSemana)
                 .produccionMesActual(produccionMes)
+                .alertasActivas(alertasActivas)
                 .build());
     }
 }
