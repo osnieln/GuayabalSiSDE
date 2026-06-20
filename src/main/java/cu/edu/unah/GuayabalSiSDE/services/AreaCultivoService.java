@@ -3,6 +3,8 @@ package cu.edu.unah.GuayabalSiSDE.services;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponse;
+import cu.edu.unah.GuayabalSiSDE.util.CultivoDistribucionResponse;
+import cu.edu.unah.GuayabalSiSDE.util.ProduccionMensualResponse;
 import cu.edu.unah.GuayabalSiSDE.util.RendimientoResponse;
 
 import java.sql.Date;
@@ -22,4 +24,8 @@ public interface AreaCultivoService {
     List<RendimientoResponse> calcularRendimiento();
 
     List<AreaCultivo> findCultivosPorVencer(int dias);
+
+    List<ProduccionMensualResponse> findProduccionMensual(int meses);
+
+    List<CultivoDistribucionResponse> findDistribucionCultivos();
 }

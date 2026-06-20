@@ -29,4 +29,14 @@ public interface RiegoRepository extends JpaRepository<Riego, Long> {
         )
     """)
     List<AreaCultivo> findAreasSinRiegoDesde(@Param("fechaLimite") Date fechaLimite);
+
+    @Query("""
+        SELECT extract(year from r.fechaPlanificacion), extract(month from r.fechaPlanificacion), COUNT(r),
+               SUM(CASE WHEN r.fechaReal IS NOT NULL THEN 1 ELSE 0 END)
+        FROM Riego r
+        WHERE r.fechaPlanificacion >= :desde
+        GROUP BY extract(year from r.fechaPlanificacion), extract(month from r.fechaPlanificacion)
+        ORDER BY extract(year from r.fechaPlanificacion), extract(month from r.fechaPlanificacion)
+    """)
+    List<Object[]> findRiegosMensualesDesde(@Param("desde") Date desde);
 }

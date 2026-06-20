@@ -3,6 +3,7 @@ package cu.edu.unah.GuayabalSiSDE.services;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivoPk;
 import cu.edu.unah.GuayabalSiSDE.entity.Riego;
+import cu.edu.unah.GuayabalSiSDE.util.RiegoMensualResponse;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface RiegoService {
     List<Riego> findRiegosProximos(int dias);
     List<Riego> findHistorialByArea(Long areaId);
     List<AreaCultivo> findAreasSinRiego(int dias);
+
+    List<RiegoMensualResponse> findRiegosMensual(int meses);
 }

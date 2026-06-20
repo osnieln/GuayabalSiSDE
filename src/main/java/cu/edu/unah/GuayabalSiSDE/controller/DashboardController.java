@@ -58,12 +58,17 @@ public class DashboardController {
                 .mapToDouble(ac -> ac.getProduccionReal() != null ? ac.getProduccionReal() : 0.0)
                 .sum();
 
+        int mesesHistorico = 6;
+
         return ResponseEntity.ok(DashboardResponse.builder()
                 .totalAreas(totalAreas)
                 .cultivosActivos(totalCultivosActivos)
                 .riegosProximosSemana(totalRiegosProximosSemana)
                 .produccionMesActual(produccionMes)
                 .alertasActivas(alertasActivas)
+                .produccionMensual(areaCultivoService.findProduccionMensual(mesesHistorico))
+                .riegosMensual(riegoService.findRiegosMensual(mesesHistorico))
+                .distribucionCultivos(areaCultivoService.findDistribucionCultivos())
                 .build());
     }
 }

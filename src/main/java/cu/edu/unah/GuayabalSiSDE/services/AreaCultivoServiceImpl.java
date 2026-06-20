@@ -3,19 +3,26 @@ package cu.edu.unah.GuayabalSiSDE.services;
 import cu.edu.unah.GuayabalSiSDE.entity.*;
 import cu.edu.unah.GuayabalSiSDE.repository.AreaCultivoRepository;
 import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponse;
+import cu.edu.unah.GuayabalSiSDE.util.CultivoDistribucionResponse;
 import cu.edu.unah.GuayabalSiSDE.util.DateFormatter;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
+import cu.edu.unah.GuayabalSiSDE.util.ProduccionMensualResponse;
 import cu.edu.unah.GuayabalSiSDE.util.RendimientoResponse;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AreaCultivoServiceImpl implements AreaCultivoService {
@@ -155,5 +162,38 @@ public class AreaCultivoServiceImpl implements AreaCultivoService {
                     .build());
         }
         return resultado;
+    }
+
+    private static final String[] MESES_ABREV = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProduccionMensualResponse> findProduccionMensual(int meses) {
+        LocalDate inicio = LocalDate.now().minusMonths(meses - 1L).withDayOfMonth(1);
+        Map<YearMonth, Double> totales = new LinkedHashMap<>();
+        for (int i = 0; i < meses; i++) {
+            totales.put(YearMonth.from(inicio.plusMonths(i)), 0.0);
+        }
+        areaCultivoRepository.findProduccionMensualDesde(Date.valueOf(inicio)).forEach(row -> {
+            YearMonth ym = YearMonth.of(((Number) row[0]).intValue(), ((Number) row[1]).intValue());
+            totales.put(ym, ((Number) row[2]).doubleValue());
+        });
+        return totales.entrySet().stream()
+                .map(e -> ProduccionMensualResponse.builder()
+                        .mes(MESES_ABREV[e.getKey().getMonthValue() - 1] + " " + e.getKey().getYear())
+                        .total(e.getValue())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CultivoDistribucionResponse> findDistribucionCultivos() {
+        return areaCultivoRepository.findDistribucionPorCultivo().stream()
+                .map(row -> CultivoDistribucionResponse.builder()
+                        .cultivo((String) row[0])
+                        .cantidad(((Number) row[1]).longValue())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

@@ -6,14 +6,20 @@ import cu.edu.unah.GuayabalSiSDE.entity.Riego;
 import cu.edu.unah.GuayabalSiSDE.repository.RiegoRepository;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
+import cu.edu.unah.GuayabalSiSDE.util.RiegoMensualResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -100,5 +106,28 @@ public class RiegoServiceImpl implements RiegoService {
     public List<AreaCultivo> findAreasSinRiego(int dias) {
         Date limite = Date.valueOf(LocalDate.now().minusDays(dias));
         return riegoRepository.findAreasSinRiegoDesde(limite);
+    }
+
+    private static final String[] MESES_ABREV = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RiegoMensualResponse> findRiegosMensual(int meses) {
+        LocalDate inicio = LocalDate.now().minusMonths(meses - 1L).withDayOfMonth(1);
+        Map<YearMonth, long[]> totales = new LinkedHashMap<>();
+        for (int i = 0; i < meses; i++) {
+            totales.put(YearMonth.from(inicio.plusMonths(i)), new long[]{0L, 0L});
+        }
+        riegoRepository.findRiegosMensualesDesde(Date.valueOf(inicio)).forEach(row -> {
+            YearMonth ym = YearMonth.of(((Number) row[0]).intValue(), ((Number) row[1]).intValue());
+            totales.put(ym, new long[]{((Number) row[2]).longValue(), ((Number) row[3]).longValue()});
+        });
+        return totales.entrySet().stream()
+                .map(e -> RiegoMensualResponse.builder()
+                        .mes(MESES_ABREV[e.getKey().getMonthValue() - 1] + " " + e.getKey().getYear())
+                        .planificados(e.getValue()[0])
+                        .ejecutados(e.getValue()[1])
+                        .build())
+                .collect(Collectors.toList());
     }
 }
