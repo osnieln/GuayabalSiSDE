@@ -110,6 +110,7 @@ public class AreaCultivoServiceImpl implements AreaCultivoService {
         if (areaCultivoDb == null) {
             throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "Esta área no existe.");
         }
+        areaCultivoDb.getAgroquimicos().size();
         areaCultivoRepository.delete(areaCultivoDb);
         return areaCultivoDb;
     }
