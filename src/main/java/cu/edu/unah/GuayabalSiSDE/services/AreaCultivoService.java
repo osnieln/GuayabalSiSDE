@@ -24,6 +24,7 @@ public interface AreaCultivoService {
     List<RendimientoResponse> calcularRendimiento();
 
     List<AreaCultivo> findCultivosPorVencer(int dias);
+    List<AreaCultivo> findByFechaRecogidaBetween(Date desde, Date hasta);
 
     List<ProduccionMensualResponse> findProduccionMensual(int meses);
 

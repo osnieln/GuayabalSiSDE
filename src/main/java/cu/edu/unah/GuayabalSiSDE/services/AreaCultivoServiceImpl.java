@@ -136,6 +136,11 @@ public class AreaCultivoServiceImpl implements AreaCultivoService {
     }
 
     @Override
+    public List<AreaCultivo> findByFechaRecogidaBetween(Date desde, Date hasta) {
+        return areaCultivoRepository.findAreaCultivoByFechaRecogidaBetween(desde, hasta);
+    }
+
+    @Override
     public List<AreaCultivo> findCultivosPorVencer(int dias) {
         Date hoy = Date.valueOf(LocalDate.now());
         Date limite = Date.valueOf(LocalDate.now().plusDays(dias));

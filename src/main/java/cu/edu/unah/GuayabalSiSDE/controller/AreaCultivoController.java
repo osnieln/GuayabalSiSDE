@@ -159,6 +159,26 @@ public class AreaCultivoController {
         return ResponseEntity.ok(areaCultivoResponseList);
     }
 
+    @GetMapping(path = "/calendario/{desde}/{hasta}")
+    public ResponseEntity<List<AreaCultivoResponse>> getCalendario(
+            @PathVariable String desde,
+            @PathVariable String hasta) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Date datDesde;
+        Date datHasta;
+        try {
+            datDesde = new Date(formatter.parse(desde).getTime());
+            datHasta = new Date(formatter.parse(hasta).getTime());
+        } catch (ParseException e) {
+            throw new BusinessValidationException(ErrorCodes.INVALID_DATE_FORMAT,
+                    "El formato de fecha no es válido. Use dd-MM-yyyy.");
+        }
+        List<AreaCultivo> list = areaCultivoService.findByFechaRecogidaBetween(datDesde, datHasta);
+        List<AreaCultivoResponse> result = new ArrayList<>();
+        list.forEach(ac -> result.add(AreaCultivoResponse.map(ac)));
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping(path = "/findByActivo/{activo}")
     public ResponseEntity<List<AreaCultivoResponse>> findByActivo(@PathVariable boolean activo){
         List<AreaCultivo> list = areaCultivoService.findByActivo(activo);

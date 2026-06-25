@@ -104,6 +104,20 @@ class AreaCultivoControllerTest {
     }
 
     @Test
+    void calendario_ConFechaEnRango_DevuelveRegistro() {
+        factory.createAreaCultivo(area.getId(), cultivo.getId(), "20260107", "20260607");
+
+        ResponseEntity<AreaCultivoResponse[]> response = restTemplate.getForEntity(
+                "/areaCultivo/calendario/01-01-2026/31-12-2026", AreaCultivoResponse[].class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody()).anyMatch(ac ->
+                ac.getAreaCultivoResponsePK().getAreaId().equals(area.getId()) &&
+                ac.getAreaCultivoResponsePK().getCultivoId().equals(cultivo.getId()));
+    }
+
+    @Test
     void delete_AreaCultivoExistente_LoElimina() {
         AreaCultivoResponsePK pk = AreaCultivoResponsePK.builder()
                 .areaId(area.getId()).cultivoId(cultivo.getId()).fechaSiembra("20260106").build();
