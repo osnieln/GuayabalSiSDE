@@ -1,33 +1,33 @@
 package cu.edu.unah.GuayabalSiSDE.reportes;
 
+import cu.edu.unah.GuayabalSiSDE.entity.ConfiguracionCorreo;
+import cu.edu.unah.GuayabalSiSDE.services.ConfiguracionCorreoService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
 
-    @Autowired(required = false)
-    private JavaMailSender mailSender;
-
-    @Value("${spring.mail.username:}")
-    private String from;
+    @Autowired
+    private ConfiguracionCorreoService configService;
 
     public void enviarExcel(String destinatario, String asunto,
                              byte[] excelBytes, String nombreArchivo) throws MessagingException {
-        if (mailSender == null) {
+        ConfiguracionCorreo cfg = configService.getConfig();
+        if (cfg.getUsuario() == null || cfg.getUsuario().isBlank()) {
             throw new IllegalStateException(
-                    "El servidor de correo no está configurado. "
-                    + "Configure las variables de entorno MAIL_HOST, MAIL_USERNAME y MAIL_PASSWORD.");
+                    "Correo no configurado. Vaya a Administración → Configuración de Correo.");
         }
-        String remitente = (from == null || from.isBlank()) ? "noreply@guayabal.cu" : from;
+        JavaMailSenderImpl sender = configService.buildMailSender(cfg);
+        String remitente = (cfg.getRemitente() != null && !cfg.getRemitente().isBlank())
+                ? cfg.getRemitente() : cfg.getUsuario();
 
-        MimeMessage msg = mailSender.createMimeMessage();
+        MimeMessage msg = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true, "UTF-8");
         helper.setFrom(remitente);
         helper.setTo(destinatario);
@@ -40,6 +40,6 @@ public class EmailService {
                 nombreArchivo,
                 new ByteArrayResource(excelBytes),
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        mailSender.send(msg);
+        sender.send(msg);
     }
 }
