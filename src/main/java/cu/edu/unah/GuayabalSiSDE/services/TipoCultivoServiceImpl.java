@@ -3,6 +3,8 @@ package cu.edu.unah.GuayabalSiSDE.services;
 import cu.edu.unah.GuayabalSiSDE.entity.Produccion;
 import cu.edu.unah.GuayabalSiSDE.entity.TipoCultivo;
 import cu.edu.unah.GuayabalSiSDE.repository.TipoCultivoRepository;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
+import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -34,18 +36,21 @@ public class TipoCultivoServiceImpl implements TipoCultivoService {
 
     @Override
     public TipoCultivo create(TipoCultivo tipoCultivo) {
+        if (tipoCultivo.getNombre() == null || tipoCultivo.getNombre().isBlank())
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "El nombre del tipo de cultivo es obligatorio.");
         TipoCultivo tipoCultivoDb = findByNombre(tipoCultivo.getNombre());
         if (tipoCultivoDb != null)
-            return null;
-        else
-            return tipoCultivoRepository.save(tipoCultivo);
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "Ya existe un tipo de cultivo con el nombre \"" + tipoCultivo.getNombre() + "\".");
+        return tipoCultivoRepository.save(tipoCultivo);
     }
 
     @Override
     public TipoCultivo edit(TipoCultivo tipoCultivo) {
+        if (tipoCultivo.getId() == null)
+            throw new BusinessValidationException(ErrorCodes.MISSING_REQUIRED_FIELD, "El ID del tipo de cultivo es obligatorio para editarlo.");
         TipoCultivo tipoCultivoDb = findById(tipoCultivo.getId());
         if (tipoCultivoDb == null)
-            return null;
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró el tipo de cultivo con ID " + tipoCultivo.getId() + ".");
         tipoCultivoDb.setNombre(tipoCultivo.getNombre());
         return tipoCultivoRepository.save(tipoCultivoDb);
     }
@@ -54,7 +59,7 @@ public class TipoCultivoServiceImpl implements TipoCultivoService {
     public TipoCultivo delete(Long id) {
         TipoCultivo tipoCultivoDb = findById(id);
         if (tipoCultivoDb == null)
-            return null;
+            throw new BusinessValidationException(ErrorCodes.OPERATION_VALIDATION_ERROR, "No se encontró el tipo de cultivo con ID " + id + ".");
         tipoCultivoRepository.delete(tipoCultivoDb);
         return tipoCultivoDb;
     }

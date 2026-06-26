@@ -17,4 +17,6 @@ public interface AreaService {
     Area deleteArea(Long id);
 
     List<String> findDistinctCapa();
+
+    List<Area> findByCapa(String capa);
 }

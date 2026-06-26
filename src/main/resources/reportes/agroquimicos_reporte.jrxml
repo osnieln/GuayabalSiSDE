@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="agroquimicos_reporte"
+              pageWidth="595" pageHeight="842"
+              columnWidth="555" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="15"
+              whenNoDataType="AllSectionsNoDetail" isIgnorePagination="true">
+
+    <parameter name="REPORT_TITLE"    class="java.lang.String"><defaultValueExpression><![CDATA["AGROQUÍMICOS MÁS UTILIZADOS"]]></defaultValueExpression></parameter>
+    <parameter name="GENERATION_DATE" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+    <parameter name="TOTAL_REGISTROS" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+
+    <field name="id"           class="java.lang.Long"/>
+    <field name="nombre"       class="java.lang.String"/>
+    <field name="totalCultivos" class="java.lang.Integer"/>
+
+    <variable name="RANK" class="java.lang.Integer" calculation="Count">
+        <variableExpression><![CDATA[$F{id}]]></variableExpression>
+    </variable>
+    <variable name="TOTAL_USOS" class="java.lang.Integer" calculation="Sum">
+        <variableExpression><![CDATA[$F{totalCultivos} != null ? $F{totalCultivos} : 0]]></variableExpression>
+    </variable>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ TÍTULO -->
+    <title>
+        <band height="90">
+            <!-- Franja superior -->
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="6" backcolor="#0B5345" forecolor="#0B5345"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+            <!-- Fondo principal -->
+            <rectangle>
+                <reportElement x="0" y="6" width="555" height="70" backcolor="#148F77" forecolor="#148F77"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+            <!-- Nombre del sistema -->
+            <staticText>
+                <reportElement x="6" y="9" width="360" height="11" forecolor="#A9DFBF"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7" isItalic="true"/></textElement>
+                <text><![CDATA[Sistema de Gestión Agrícola — Granja El Guayabal]]></text>
+            </staticText>
+            <!-- Fecha (derecha) -->
+            <textField>
+                <reportElement x="366" y="9" width="183" height="11" forecolor="#A9DFBF"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7"/></textElement>
+                <textFieldExpression><![CDATA[$P{GENERATION_DATE} + "  "]]></textFieldExpression>
+            </textField>
+            <!-- Separador horizontal tenue -->
+            <line>
+                <reportElement x="6" y="22" width="543" height="1" forecolor="#76D7C4"/>
+                <graphicElement><pen lineWidth="0.4"/></graphicElement>
+            </line>
+            <!-- Título -->
+            <textField>
+                <reportElement x="0" y="24" width="555" height="24" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="14" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{REPORT_TITLE}]]></textFieldExpression>
+            </textField>
+            <!-- Separador inferior del título -->
+            <line>
+                <reportElement x="6" y="49" width="543" height="1" forecolor="#76D7C4"/>
+                <graphicElement><pen lineWidth="0.4"/></graphicElement>
+            </line>
+            <!-- Subtítulo/descripción con etiqueta -->
+            <staticText>
+                <reportElement x="6" y="52" width="55" height="12" forecolor="#A9DFBF"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7" isBold="true"/></textElement>
+                <text><![CDATA[Criterio:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="62" y="52" width="310" height="12" forecolor="#FDFEFE"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7" isItalic="true"/></textElement>
+                <text><![CDATA[Ordenados por número de cultivos en los que se aplican]]></text>
+            </staticText>
+            <!-- Total registros -->
+            <textField>
+                <reportElement x="374" y="52" width="175" height="12" forecolor="#FDFEFE"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="7" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_REGISTROS} + "  "]]></textFieldExpression>
+            </textField>
+            <!-- Franja inferior -->
+            <rectangle>
+                <reportElement x="0" y="76" width="555" height="4" backcolor="#0B5345" forecolor="#0B5345"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+            <rectangle>
+                <reportElement x="0" y="80" width="555" height="10" backcolor="#FFFFFF" forecolor="#FFFFFF"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+        </band>
+    </title>
+
+    <!-- ══════════════════════════════════════════════════════════ CABECERA COLUMNAS -->
+    <columnHeader>
+        <band height="22">
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="22" backcolor="#117A65" forecolor="#117A65"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+            <staticText><reportElement x="2"   y="3" width="35"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="9" isBold="true"/></textElement><text><![CDATA[#]]></text></staticText>
+            <staticText><reportElement x="39"  y="3" width="50"  height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="9" isBold="true"/></textElement><text><![CDATA[ID]]></text></staticText>
+            <staticText><reportElement x="91"  y="3" width="310" height="16" forecolor="#FFFFFF"/><textElement textAlignment="Left"   verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="9" isBold="true"/></textElement><text><![CDATA[  NOMBRE DEL AGROQUÍMICO]]></text></staticText>
+            <staticText><reportElement x="403" y="3" width="150" height="16" forecolor="#FFFFFF"/><textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="9" isBold="true"/></textElement><text><![CDATA[CULTIVOS QUE LO USAN]]></text></staticText>
+        </band>
+    </columnHeader>
+
+    <!-- ═══════════════════════════════════════════════════════════════ FILAS DATOS -->
+    <detail>
+        <band height="22">
+            <!-- Fondo alternado pares -->
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="22" backcolor="#E8F8F5" forecolor="#E8F8F5">
+                    <printWhenExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></printWhenExpression>
+                </reportElement>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+            <!-- Ranking -->
+            <textField>
+                <reportElement x="2" y="3" width="35" height="16" forecolor="#148F77"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="9" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$V{RANK}]]></textFieldExpression>
+            </textField>
+            <!-- ID -->
+            <textField isBlankWhenNull="true">
+                <reportElement x="39" y="3" width="50" height="16"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+            </textField>
+            <!-- Nombre -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement x="93" y="3" width="308" height="16"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+            </textField>
+            <!-- Total cultivos -->
+            <textField isBlankWhenNull="true">
+                <reportElement x="403" y="3" width="150" height="16" forecolor="#148F77"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="10" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$F{totalCultivos} + " cultivo(s)"]]></textFieldExpression>
+            </textField>
+            <!-- Separadores -->
+            <line><reportElement x="37"  y="0" width="1" height="22" forecolor="#A9DFBF"/><graphicElement><pen lineWidth="0.4"/></graphicElement></line>
+            <line><reportElement x="89"  y="0" width="1" height="22" forecolor="#A9DFBF"/><graphicElement><pen lineWidth="0.4"/></graphicElement></line>
+            <line><reportElement x="401" y="0" width="1" height="22" forecolor="#A9DFBF"/><graphicElement><pen lineWidth="0.4"/></graphicElement></line>
+            <line><reportElement x="0"   y="21" width="555" height="1" forecolor="#D1F2EB"/><graphicElement><pen lineWidth="0.3"/></graphicElement></line>
+        </band>
+    </detail>
+
+    <!-- ═══════════════════════════════════════════════════════════════ PIE DE PÁGINA -->
+    <pageFooter>
+        <band height="16">
+            <line><reportElement x="0" y="0" width="555" height="1" forecolor="#148F77"/><graphicElement><pen lineWidth="0.7"/></graphicElement></line>
+            <staticText>
+                <reportElement x="2" y="3" width="360" height="11" forecolor="#7F8C8D"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="6" isItalic="true"/></textElement>
+                <text><![CDATA[  Sistema de Gestión Agrícola — Granja El Guayabal  |  Documento generado automáticamente]]></text>
+            </staticText>
+            <textField evaluationTime="Report">
+                <reportElement x="430" y="3" width="125" height="11" forecolor="#7F8C8D"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="6"/></textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+
+    <!-- ══════════════════════════════════════════════════════════════════ RESUMEN -->
+    <summary>
+        <band height="32">
+            <rectangle>
+                <reportElement x="0" y="6" width="555" height="22" backcolor="#A9DFBF" forecolor="#A9DFBF"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="6" y="9" width="260" height="16" forecolor="#0B5345"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="9" isBold="true"/></textElement>
+                <text><![CDATA[  Total de agroquímicos registrados:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="270" y="9" width="80" height="16" forecolor="#0B5345"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="10" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="360" y="9" width="100" height="16" forecolor="#0B5345"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="9" isBold="true"/></textElement>
+                <text><![CDATA[Total aplicaciones:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="462" y="9" width="90" height="16" forecolor="#0B5345"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" pdfFontName="Helvetica" isPdfEmbedded="false" size="10" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$V{TOTAL_USOS}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+
+</jasperReport>
