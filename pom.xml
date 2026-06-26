@@ -100,21 +100,6 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>5.2.5</version>
 		</dependency>
-		<!-- Spring Mail para envío de correos electrónicos -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
-		<!-- Jakarta Mail API (necesaria para compilar EmailService) -->
-		<dependency>
-			<groupId>jakarta.mail</groupId>
-			<artifactId>jakarta.mail-api</artifactId>
-		</dependency>
-		<!-- Implementación de Jakarta Mail (Angus Mail) -->
-		<dependency>
-			<groupId>org.eclipse.angus</groupId>
-			<artifactId>angus-mail</artifactId>
-		</dependency>
 	</dependencies>
 
 	<build>

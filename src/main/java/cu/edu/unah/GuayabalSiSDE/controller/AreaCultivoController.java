@@ -1,7 +1,6 @@
 package cu.edu.unah.GuayabalSiSDE.controller;
 
 import cu.edu.unah.GuayabalSiSDE.entity.*;
-import cu.edu.unah.GuayabalSiSDE.reportes.EmailService;
 import cu.edu.unah.GuayabalSiSDE.reportes.ExcelExportService;
 import cu.edu.unah.GuayabalSiSDE.services.AgroquimicoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaCultivoService;
@@ -20,9 +19,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
@@ -52,9 +48,6 @@ public class AreaCultivoController {
 
     @Autowired
     private ExcelExportService excelExportService;
-
-    @Autowired
-    private EmailService emailService;
 
     @GetMapping
     ResponseEntity<List<AreaCultivoResponse>> findAll(){
@@ -220,28 +213,6 @@ public class AreaCultivoController {
             return ResponseEntity.ok().headers(headers).body(bytes);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    @PostMapping(path = "/email/calendario/{desde}/{hasta}")
-    public ResponseEntity<Map<String, String>> emailCalendario(
-            @PathVariable String desde, @PathVariable String hasta,
-            @RequestParam String destinatario) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        Map<String, String> resp = new LinkedHashMap<>();
-        try {
-            Date datDesde = new Date(formatter.parse(desde).getTime());
-            Date datHasta = new Date(formatter.parse(hasta).getTime());
-            List<AreaCultivo> list = areaCultivoService.findByFechaRecogidaBetween(datDesde, datHasta);
-            byte[] bytes = excelExportService.generarExcelCalendarioCosecha(list);
-            emailService.enviarExcel(destinatario, "Planificación de Cosecha", bytes, "planificacion_cosecha.xlsx");
-            resp.put("status", "ok");
-            resp.put("mensaje", "Reporte enviado correctamente a " + destinatario);
-            return ResponseEntity.ok(resp);
-        } catch (Exception e) {
-            resp.put("status", "error");
-            resp.put("mensaje", e.getMessage());
-            return ResponseEntity.internalServerError().body(resp);
         }
     }
 

@@ -1,6 +1,5 @@
 package cu.edu.unah.GuayabalSiSDE.controller;
 
-import cu.edu.unah.GuayabalSiSDE.reportes.EmailService;
 import cu.edu.unah.GuayabalSiSDE.reportes.ExcelExportService;
 import cu.edu.unah.GuayabalSiSDE.reportes.ReporteAreaCultivoService;
 import cu.edu.unah.GuayabalSiSDE.reportes.ReporteService;
@@ -13,9 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import org.springframework.core.io.ClassPathResource;
 
@@ -45,9 +41,6 @@ public class ReporteController {
 
     @Autowired
     private ExcelExportService excelExportService;
-
-    @Autowired
-    private EmailService emailService;
 
     private final SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -204,20 +197,6 @@ public class ReporteController {
         return ResponseEntity.ok().headers(h).body(bytes);
     }
 
-    private ResponseEntity<Map<String, String>> emailOk(String destinatario) {
-        Map<String, String> r = new LinkedHashMap<>();
-        r.put("status", "ok");
-        r.put("mensaje", "Reporte enviado correctamente a " + destinatario);
-        return ResponseEntity.ok(r);
-    }
-
-    private ResponseEntity<Map<String, String>> emailErr(String msg) {
-        Map<String, String> r = new LinkedHashMap<>();
-        r.put("status", "error");
-        r.put("mensaje", msg);
-        return ResponseEntity.internalServerError().body(r);
-    }
-
     @GetMapping("/excel/todasAreasCultivo")
     public ResponseEntity<byte[]> excelTodasAreasCultivo() {
         try {
@@ -299,102 +278,6 @@ public class ReporteController {
             return excelResponse(bytes, "agroquimicos_mas_usados.xlsx");
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    // ── Endpoints Correo ──────────────────────────────────────────────────────
-
-    @PostMapping("/email/todasAreasCultivo")
-    public ResponseEntity<Map<String, String>> emailTodasAreasCultivo(@RequestParam String destinatario) {
-        try {
-            List<AreaCultivoResponseReport> data = areaCultivoService.findAll().stream()
-                    .map(AreaCultivoResponseReport::map).collect(Collectors.toList());
-            byte[] bytes = excelExportService.generarExcelAreasCultivo(data,
-                    "RESUMEN GENERAL DE ÁREAS DE CULTIVO", "Sin filtros — todos los registros");
-            emailService.enviarExcel(destinatario, "Resumen Áreas de Cultivo", bytes, "resumen_areas_cultivo.xlsx");
-            return emailOk(destinatario);
-        } catch (Exception e) {
-            return emailErr(e.getMessage());
-        }
-    }
-
-    @PostMapping("/email/planProdBetween/{planInicio}/{planFin}")
-    public ResponseEntity<Map<String, String>> emailPlanProd(
-            @PathVariable Long planInicio, @PathVariable Long planFin,
-            @RequestParam String destinatario) {
-        try {
-            List<AreaCultivoResponseReport> data = areaCultivoService
-                    .findAreaCultivoByPlanProdBetween(planInicio, planFin).stream()
-                    .map(AreaCultivoResponseReport::map).collect(Collectors.toList());
-            byte[] bytes = excelExportService.generarExcelAreasCultivo(data,
-                    "ÁREAS DE CULTIVO — POR PLAN DE PRODUCCIÓN",
-                    "Plan entre " + planInicio + " t y " + planFin + " t");
-            emailService.enviarExcel(destinatario, "Reporte Plan de Producción", bytes, "cultivos_plan_produccion.xlsx");
-            return emailOk(destinatario);
-        } catch (Exception e) {
-            return emailErr(e.getMessage());
-        }
-    }
-
-    @PostMapping("/email/prodCultivosPermanenteAfter/{prod}")
-    public ResponseEntity<Map<String, String>> emailProdPermanente(
-            @PathVariable Double prod, @RequestParam String destinatario) {
-        try {
-            List<AreaCultivoResponseReport> data = areaCultivoService
-                    .findAreaCultivoByProdCultivosPermanenteAfter(prod).stream()
-                    .map(AreaCultivoResponseReport::map).collect(Collectors.toList());
-            byte[] bytes = excelExportService.generarExcelAreasCultivo(data,
-                    "ÁREAS DE CULTIVO — PRODUCCIÓN PERMANENTE",
-                    "Producción permanente mayor de " + prod + " t");
-            emailService.enviarExcel(destinatario, "Reporte Cultivos Permanentes", bytes, "cultivos_prod_permanente.xlsx");
-            return emailOk(destinatario);
-        } catch (Exception e) {
-            return emailErr(e.getMessage());
-        }
-    }
-
-    @PostMapping("/email/fechaRecogidaBefore/{fecha}")
-    public ResponseEntity<Map<String, String>> emailFechaRecogida(
-            @PathVariable String fecha, @RequestParam String destinatario) {
-        try {
-            Date d = inputFormat.parse(fecha);
-            List<AreaCultivoResponseReport> data = areaCultivoService
-                    .findAreaCultivoByFechaRecogidaBefore(new java.sql.Date(d.getTime())).stream()
-                    .map(AreaCultivoResponseReport::map).collect(Collectors.toList());
-            byte[] bytes = excelExportService.generarExcelAreasCultivo(data,
-                    "ÁREAS DE CULTIVO — FILTRO POR FECHA DE RECOGIDA",
-                    "Fecha de recogida anterior a: " + fecha);
-            emailService.enviarExcel(destinatario, "Reporte Fecha de Recogida", bytes, "cultivos_fecha_recogida.xlsx");
-            return emailOk(destinatario);
-        } catch (Exception e) {
-            return emailErr(e.getMessage());
-        }
-    }
-
-    @PostMapping("/email/cultivosPorVencer/{dias}")
-    public ResponseEntity<Map<String, String>> emailCultivosPorVencer(
-            @PathVariable int dias, @RequestParam String destinatario) {
-        try {
-            List<AreaCultivoResponseReport> data = areaCultivoService.findCultivosPorVencer(dias).stream()
-                    .map(AreaCultivoResponseReport::map).collect(Collectors.toList());
-            byte[] bytes = excelExportService.generarExcelAreasCultivo(data,
-                    "CULTIVOS PRÓXIMOS A VENCER", "Próximos " + dias + " día(s)");
-            emailService.enviarExcel(destinatario, "Reporte Cultivos por Vencer", bytes, "cultivos_por_vencer.xlsx");
-            return emailOk(destinatario);
-        } catch (Exception e) {
-            return emailErr(e.getMessage());
-        }
-    }
-
-    @PostMapping("/email/agroquimicosMasUsados")
-    public ResponseEntity<Map<String, String>> emailAgroquimicos(@RequestParam String destinatario) {
-        try {
-            List<AgroquimicoReporteResponse> data = agroquimicoService.findMasUtilizadosConConteo();
-            byte[] bytes = excelExportService.generarExcelAgroquimicos(data);
-            emailService.enviarExcel(destinatario, "Agroquímicos Más Utilizados", bytes, "agroquimicos_mas_usados.xlsx");
-            return emailOk(destinatario);
-        } catch (Exception e) {
-            return emailErr(e.getMessage());
         }
     }
 
