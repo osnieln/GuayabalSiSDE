@@ -1,6 +1,8 @@
 package cu.edu.unah.GuayabalSiSDE.controller;
 
 import cu.edu.unah.GuayabalSiSDE.entity.*;
+import cu.edu.unah.GuayabalSiSDE.reportes.EmailService;
+import cu.edu.unah.GuayabalSiSDE.reportes.ExcelExportService;
 import cu.edu.unah.GuayabalSiSDE.services.AgroquimicoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaCultivoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaService;
@@ -18,6 +20,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
@@ -44,6 +49,12 @@ public class AreaCultivoController {
     @Autowired
     @Lazy
     AgroquimicoService agroquimicoService;
+
+    @Autowired
+    private ExcelExportService excelExportService;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping
     ResponseEntity<List<AreaCultivoResponse>> findAll(){
@@ -190,6 +201,48 @@ public class AreaCultivoController {
     @GetMapping(path = "/rendimiento")
     public ResponseEntity<List<RendimientoResponse>> calcularRendimiento(){
         return ResponseEntity.ok(areaCultivoService.calcularRendimiento());
+    }
+
+    @GetMapping(path = "/excel/calendario/{desde}/{hasta}")
+    public ResponseEntity<byte[]> excelCalendario(
+            @PathVariable String desde, @PathVariable String hasta) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            Date datDesde = new Date(formatter.parse(desde).getTime());
+            Date datHasta = new Date(formatter.parse(hasta).getTime());
+            List<AreaCultivo> list = areaCultivoService.findByFechaRecogidaBetween(datDesde, datHasta);
+            byte[] bytes = excelExportService.generarExcelCalendarioCosecha(list);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+            headers.setContentDispositionFormData("attachment", "planificacion_cosecha.xlsx");
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+            return ResponseEntity.ok().headers(headers).body(bytes);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping(path = "/email/calendario/{desde}/{hasta}")
+    public ResponseEntity<Map<String, String>> emailCalendario(
+            @PathVariable String desde, @PathVariable String hasta,
+            @RequestParam String destinatario) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Map<String, String> resp = new LinkedHashMap<>();
+        try {
+            Date datDesde = new Date(formatter.parse(desde).getTime());
+            Date datHasta = new Date(formatter.parse(hasta).getTime());
+            List<AreaCultivo> list = areaCultivoService.findByFechaRecogidaBetween(datDesde, datHasta);
+            byte[] bytes = excelExportService.generarExcelCalendarioCosecha(list);
+            emailService.enviarExcel(destinatario, "Planificación de Cosecha", bytes, "planificacion_cosecha.xlsx");
+            resp.put("status", "ok");
+            resp.put("mensaje", "Reporte enviado correctamente a " + destinatario);
+            return ResponseEntity.ok(resp);
+        } catch (Exception e) {
+            resp.put("status", "error");
+            resp.put("mensaje", e.getMessage());
+            return ResponseEntity.internalServerError().body(resp);
+        }
     }
 
     @GetMapping(path = "/export/csv")
