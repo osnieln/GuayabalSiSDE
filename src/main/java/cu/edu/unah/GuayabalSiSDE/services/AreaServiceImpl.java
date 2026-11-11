@@ -24,6 +24,11 @@ public class AreaServiceImpl implements AreaService{
     }
 
     @Override
+    public long count() {
+        return areaRepository.count();
+    }
+
+    @Override
     public Area findByID(Long id) {
         return areaRepository.findById(id).orElse(null);
     }

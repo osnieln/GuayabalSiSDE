@@ -1,9 +1,6 @@
 package cu.edu.unah.GuayabalSiSDE.controller;
 
-import cu.edu.unah.GuayabalSiSDE.entity.Agroquimico;
-import cu.edu.unah.GuayabalSiSDE.entity.AreaCultivo;
-import cu.edu.unah.GuayabalSiSDE.entity.Riego;
-import cu.edu.unah.GuayabalSiSDE.services.AgroquimicoService;
+import cu.edu.unah.GuayabalSiSDE.services.AlertaSistemaService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaCultivoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaService;
 import cu.edu.unah.GuayabalSiSDE.services.RiegoService;
@@ -15,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "dashboard")
 public class DashboardController {
+
+    private static final int DIAS_RIEGO_PROXIMO = 7;
+    private static final int MESES_HISTORICO = 6;
 
     @Autowired
     AreaService areaService;
@@ -31,43 +30,27 @@ public class DashboardController {
     RiegoService riegoService;
 
     @Autowired
-    AgroquimicoService agroquimicoService;
+    AlertaSistemaService alertaSistemaService;
 
     @GetMapping
     public ResponseEntity<DashboardResponse> getDashboard() {
-        long totalAreas = areaService.findAll().size();
-
-        List<AreaCultivo> cultivosActivos = areaCultivoService.findByActivo(true);
-        long totalCultivosActivos = cultivosActivos.size();
-
-        List<Riego> riegosProximos = riegoService.findRiegosProximos(7);
-        long totalRiegosProximosSemana = riegosProximos.size();
-
-        long alertasActivas = areaCultivoService.findCultivosPorVencer(7).size()
-                + riegoService.findAreasSinRiego(7).size()
-                + agroquimicoService.findBajoStock().size();
+        long totalAreas = areaService.count();
+        long totalCultivosActivos = areaCultivoService.countActivos();
+        long totalRiegosProximosSemana = riegoService.countRiegosProximos(DIAS_RIEGO_PROXIMO);
+        long alertasActivas = alertaSistemaService.countActivas();
 
         int mesActual = LocalDate.now().getMonthValue();
         int anioActual = LocalDate.now().getYear();
-        double produccionMes = areaCultivoService.findAll().stream()
-                .filter(ac -> {
-                    if (ac.getFechaRecogida() == null) return false;
-                    LocalDate fecha = ac.getFechaRecogida().toLocalDate();
-                    return fecha.getMonthValue() == mesActual && fecha.getYear() == anioActual;
-                })
-                .mapToDouble(ac -> ac.getProduccionReal() != null ? ac.getProduccionReal() : 0.0)
-                .sum();
-
-        int mesesHistorico = 6;
+        Double produccionMes = areaCultivoService.sumProduccionRealDelMes(mesActual, anioActual);
 
         return ResponseEntity.ok(DashboardResponse.builder()
                 .totalAreas(totalAreas)
                 .cultivosActivos(totalCultivosActivos)
                 .riegosProximosSemana(totalRiegosProximosSemana)
-                .produccionMesActual(produccionMes)
+                .produccionMesActual(produccionMes != null ? produccionMes : 0.0)
                 .alertasActivas(alertasActivas)
-                .produccionMensual(areaCultivoService.findProduccionMensual(mesesHistorico))
-                .riegosMensual(riegoService.findRiegosMensual(mesesHistorico))
+                .produccionMensual(areaCultivoService.findProduccionMensual(MESES_HISTORICO))
+                .riegosMensual(riegoService.findRiegosMensual(MESES_HISTORICO))
                 .distribucionCultivos(areaCultivoService.findDistribucionCultivos())
                 .build());
     }

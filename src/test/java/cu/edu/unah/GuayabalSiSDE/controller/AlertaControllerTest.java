@@ -26,9 +26,10 @@ class AlertaControllerTest {
     }
 
     @Test
-    void findAll_DevuelveAlertaPorAgroquimicoBajoStock() {
-        factory.createAgroquimico("Sulfato Bajo Stock", 2.0, 10.0);
+    void generar_PersisteAlertaPorAgroquimicoBajoStock() {
+        factory.createAgroquimico("Sulfato Bajo Stock " + System.nanoTime(), 2.0, 10.0);
 
+        restTemplate.postForEntity("/alertas/generar", null, Void.class);
         ResponseEntity<AlertaResponse[]> response = restTemplate.getForEntity("/alertas", AlertaResponse[].class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -36,9 +37,29 @@ class AlertaControllerTest {
     }
 
     @Test
-    void findAll_ConParametrosPersonalizados_DevuelveOk() {
-        ResponseEntity<AlertaResponse[]> response = restTemplate.getForEntity("/alertas?diasCultivo=15&diasRiego=3", AlertaResponse[].class);
+    void findAll_ConSoloNoLeidas_DevuelveOk() {
+        ResponseEntity<AlertaResponse[]> response = restTemplate.getForEntity("/alertas?soloNoLeidas=true", AlertaResponse[].class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void marcarLeidaYResuelta_ActualizanLaAlerta() {
+        factory.createAgroquimico("Potasio Bajo Stock " + System.nanoTime(), 1.0, 5.0);
+        restTemplate.postForEntity("/alertas/generar", null, Void.class);
+
+        AlertaResponse[] alertas = restTemplate.getForObject("/alertas", AlertaResponse[].class);
+        assertThat(alertas).isNotEmpty();
+        Long id = alertas[0].getId();
+
+        ResponseEntity<AlertaResponse> leida = restTemplate.exchange(
+                "/alertas/" + id + "/leida", org.springframework.http.HttpMethod.PUT, null, AlertaResponse.class);
+        assertThat(leida.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(leida.getBody().isLeida()).isTrue();
+
+        ResponseEntity<AlertaResponse> resuelta = restTemplate.exchange(
+                "/alertas/" + id + "/resuelta", org.springframework.http.HttpMethod.PUT, null, AlertaResponse.class);
+        assertThat(resuelta.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(resuelta.getBody().isResuelta()).isTrue();
     }
 }

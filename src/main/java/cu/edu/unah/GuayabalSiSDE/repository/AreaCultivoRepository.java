@@ -19,6 +19,16 @@ public interface AreaCultivoRepository extends JpaRepository<AreaCultivo, AreaCu
 
     List<AreaCultivo> findByActivo(boolean activo);
 
+    long countByActivo(boolean activo);
+
+    @Query("""
+        SELECT SUM(ac.produccionReal) FROM AreaCultivo ac
+        WHERE ac.fechaRecogida IS NOT NULL
+        AND extract(year from ac.fechaRecogida) = :anio
+        AND extract(month from ac.fechaRecogida) = :mes
+    """)
+    Double sumProduccionRealByMesAnio(@Param("mes") int mes, @Param("anio") int anio);
+
     List<AreaCultivo> findAreaCultivoByFechaRecogidaBetween(Date fechaInicio, Date fechaFin);
 
     @Query("""

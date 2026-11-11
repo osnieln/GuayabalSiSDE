@@ -98,6 +98,13 @@ public class RiegoServiceImpl implements RiegoService {
     }
 
     @Override
+    public long countRiegosProximos(int dias) {
+        Date hoy = Date.valueOf(LocalDate.now());
+        Date hasta = Date.valueOf(LocalDate.now().plusDays(dias));
+        return riegoRepository.countByFechaPlanificacionBetweenAndFechaRealIsNull(hoy, hasta);
+    }
+
+    @Override
     public List<Riego> findHistorialByArea(Long areaId) {
         return riegoRepository.findByAreaCultivo_AreaCultivoPk_AreaId(areaId);
     }

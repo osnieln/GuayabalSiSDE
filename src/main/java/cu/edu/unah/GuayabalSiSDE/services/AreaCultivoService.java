@@ -21,6 +21,8 @@ public interface AreaCultivoService {
     List<AreaCultivo> findAreaCultivoByProdCultivosPermanenteAfter(Double prodCultivosPermanente);
     List<AreaCultivo> findAreaCultivoByFechaRecogidaBefore(Date fechaRecogida);
     List<AreaCultivo> findByActivo(boolean activo);
+    long countActivos();
+    Double sumProduccionRealDelMes(int mes, int anio);
     List<RendimientoResponse> calcularRendimiento();
 
     List<AreaCultivo> findCultivosPorVencer(int dias);

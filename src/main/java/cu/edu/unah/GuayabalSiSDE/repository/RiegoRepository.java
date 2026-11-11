@@ -16,6 +16,8 @@ public interface RiegoRepository extends JpaRepository<Riego, Long> {
 
     List<Riego> findByFechaPlanificacionBetweenAndFechaRealIsNull(Date inicio, Date fin);
 
+    long countByFechaPlanificacionBetweenAndFechaRealIsNull(Date inicio, Date fin);
+
     List<Riego> findByAreaCultivo_AreaCultivoPk_AreaIdAndFechaRealIsNotNull(Long areaId);
 
     List<Riego> findByAreaCultivo_AreaCultivoPk_AreaId(Long areaId);

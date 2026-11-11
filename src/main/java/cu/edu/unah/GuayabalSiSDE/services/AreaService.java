@@ -8,6 +8,8 @@ public interface AreaService {
 
     List<Area> findAll();
 
+    long count();
+
     Area findByID(Long id);
 
     Area createArea(Area area);

@@ -136,6 +136,16 @@ public class AreaCultivoServiceImpl implements AreaCultivoService {
     }
 
     @Override
+    public long countActivos() {
+        return areaCultivoRepository.countByActivo(true);
+    }
+
+    @Override
+    public Double sumProduccionRealDelMes(int mes, int anio) {
+        return areaCultivoRepository.sumProduccionRealByMesAnio(mes, anio);
+    }
+
+    @Override
     public List<AreaCultivo> findByFechaRecogidaBetween(Date desde, Date hasta) {
         return areaCultivoRepository.findAreaCultivoByFechaRecogidaBetween(desde, hasta);
     }
