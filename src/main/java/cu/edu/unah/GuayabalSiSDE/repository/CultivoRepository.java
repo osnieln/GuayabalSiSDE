@@ -9,4 +9,6 @@ import java.util.List;
 public interface CultivoRepository extends JpaRepository<Cultivo, Long> {
 
     public List<Cultivo> findCultivoByProduccion(Produccion produccion);
+
+    List<Cultivo> findByDescripcionContainingIgnoreCase(String texto);
 }

@@ -217,4 +217,53 @@ class AgroquimicoServiceTest {
         verify(agroquimicoRepository, times(1)).findById(99L);
         verify(agroquimicoRepository, never()).delete(any(Agroquimico.class));
     }
+
+    @Test
+    void findBajoStock_ShouldReturnOnlyAgroquimicosBelowOrAtThreshold() {
+        // Arrange
+        Agroquimico bajoStock = Agroquimico.builder()
+                .id(3L)
+                .nombre("Bajo Stock")
+                .stockActual(5.0)
+                .stockMinimo(10.0)
+                .areaCultivos(new ArrayList<>())
+                .build();
+
+        Agroquimico stockIgual = Agroquimico.builder()
+                .id(4L)
+                .nombre("Stock Igual")
+                .stockActual(10.0)
+                .stockMinimo(10.0)
+                .areaCultivos(new ArrayList<>())
+                .build();
+
+        Agroquimico stockSuficiente = Agroquimico.builder()
+                .id(5L)
+                .nombre("Stock Suficiente")
+                .stockActual(20.0)
+                .stockMinimo(10.0)
+                .areaCultivos(new ArrayList<>())
+                .build();
+
+        Agroquimico sinStockDefinido = Agroquimico.builder()
+                .id(6L)
+                .nombre("Sin Stock Definido")
+                .areaCultivos(new ArrayList<>())
+                .build();
+
+        when(agroquimicoRepository.findAll())
+                .thenReturn(Arrays.asList(bajoStock, stockIgual, stockSuficiente, sinStockDefinido));
+
+        // Act
+        List<Agroquimico> result = agroquimicoService.findBajoStock();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.contains(bajoStock));
+        assertTrue(result.contains(stockIgual));
+        assertFalse(result.contains(stockSuficiente));
+        assertFalse(result.contains(sinStockDefinido));
+        verify(agroquimicoRepository, times(1)).findAll();
+    }
 }

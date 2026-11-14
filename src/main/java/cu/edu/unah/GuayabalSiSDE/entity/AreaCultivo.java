@@ -38,6 +38,8 @@ public class AreaCultivo implements Serializable {
     @ManyToOne(optional = false)
     private Area area;
 
+    boolean activo = true;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "area_cultivo_agroquimico",

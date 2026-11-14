@@ -14,4 +14,10 @@ public interface AgroquimicoRepository extends JpaRepository<Agroquimico, Long> 
 //    List<Agroquimico> findAllWithAreaCultivos();
 
     Agroquimico findByNombre(String nombre);
+
+    @Query("SELECT a FROM Agroquimico a LEFT JOIN a.areaCultivos ac GROUP BY a ORDER BY COUNT(ac) DESC")
+    List<Agroquimico> findMasUtilizados();
+
+    @Query("SELECT a.id, a.nombre, COUNT(ac) FROM Agroquimico a LEFT JOIN a.areaCultivos ac GROUP BY a.id, a.nombre ORDER BY COUNT(ac) DESC")
+    List<Object[]> findMasUtilizadosConConteo();
 }

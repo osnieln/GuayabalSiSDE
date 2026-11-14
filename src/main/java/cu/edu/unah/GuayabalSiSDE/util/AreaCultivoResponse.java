@@ -19,6 +19,7 @@ public class AreaCultivoResponse implements Serializable {
     Double prodCultivosPermanente;
     Double prodCultivosTemporales;
     Double produccionReal;
+    boolean activo;
     List<String> agroquimicos;
 
     public static AreaCultivoResponse map(AreaCultivo areaCultivo){
@@ -33,6 +34,7 @@ public class AreaCultivoResponse implements Serializable {
                 .prodCultivosPermanente(areaCultivo.getProdCultivosPermanente())
                 .prodCultivosTemporales(areaCultivo.getProdCultivosTemporales())
                 .produccionReal(areaCultivo.getProduccionReal())
+                .activo(areaCultivo.isActivo())
                 .agroquimicos(areaCultivo.getAgroquimicos().stream().map(Agroquimico::getNombre).collect(Collectors.toList()))
                 .build();
     }
@@ -49,6 +51,7 @@ public class AreaCultivoResponse implements Serializable {
                 .prodCultivosPermanente(areaCultivoResponse.prodCultivosPermanente)
                 .prodCultivosTemporales(areaCultivoResponse.prodCultivosTemporales)
                 .produccionReal(areaCultivoResponse.getProduccionReal())
+                .activo(areaCultivoResponse.isActivo())
                 .agroquimicos(agroquimicos)
                 .cultivo(cultivo)
                 .area(area)

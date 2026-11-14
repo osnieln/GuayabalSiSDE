@@ -8,6 +8,8 @@ public interface AreaService {
 
     List<Area> findAll();
 
+    long count();
+
     Area findByID(Long id);
 
     Area createArea(Area area);
@@ -17,4 +19,6 @@ public interface AreaService {
     Area deleteArea(Long id);
 
     List<String> findDistinctCapa();
+
+    List<Area> findByCapa(String capa);
 }

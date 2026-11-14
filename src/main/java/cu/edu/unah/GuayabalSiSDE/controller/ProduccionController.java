@@ -3,6 +3,7 @@ package cu.edu.unah.GuayabalSiSDE.controller;
 import cu.edu.unah.GuayabalSiSDE.entity.Cultivo;
 import cu.edu.unah.GuayabalSiSDE.entity.Produccion;
 import cu.edu.unah.GuayabalSiSDE.services.ProduccionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,12 @@ public class ProduccionController {
     }
 
     @PostMapping(path = "create")
-    public ResponseEntity<Produccion> create(@RequestBody(required = true) Produccion produccion) {
+    public ResponseEntity<Produccion> create(@Valid @RequestBody(required = true) Produccion produccion) {
         return ResponseEntity.ok(produccionService.create(produccion));
     }
 
     @PutMapping (path = "edit")
-    public ResponseEntity<Produccion> edit(@RequestBody(required = true) Produccion produccion){
+    public ResponseEntity<Produccion> edit(@Valid @RequestBody(required = true) Produccion produccion){
         return ResponseEntity.ok(produccionService.edit(produccion));
     }
 

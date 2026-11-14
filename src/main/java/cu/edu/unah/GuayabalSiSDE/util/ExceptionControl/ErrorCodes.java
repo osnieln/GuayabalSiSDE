@@ -9,7 +9,9 @@ public enum ErrorCodes {
     MISSING_REQUIRED_FIELD("001", "Required field not provided."),
     INVALID_PARAMETER_COMBINATION("002", "Invalid parameter combination."),
     INVALID_DATE_FORMAT("003", "Invalid date format."),
-    OPERATION_VALIDATION_ERROR("004", "Validation error in operation.");
+    OPERATION_VALIDATION_ERROR("004", "Validation error in operation."),
+    INSUFFICIENT_STOCK("005", "Insufficient stock for the requested operation."),
+    ENTITY_NOT_FOUND("006", "The requested entity does not exist.");
 
     private final String code;
     private final String description;

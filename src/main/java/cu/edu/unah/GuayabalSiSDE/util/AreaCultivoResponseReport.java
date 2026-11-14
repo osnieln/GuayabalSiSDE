@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
@@ -24,9 +23,14 @@ public class AreaCultivoResponseReport implements Serializable {
     Double prodCultivosPermanente;
     Double prodCultivosTemporales;
     Double produccionReal;
-    List<String> agroquimicos;
+    String agroquimicos;
 
     public static AreaCultivoResponseReport map(AreaCultivo areaCultivo){
+        String agros = areaCultivo.getAgroquimicos() == null || areaCultivo.getAgroquimicos().isEmpty()
+                ? "Ninguno"
+                : areaCultivo.getAgroquimicos().stream()
+                        .map(Agroquimico::getNombre)
+                        .collect(Collectors.joining(", "));
         return AreaCultivoResponseReport.builder()
                 .area(areaCultivo.getArea().getDescripcion())
                 .cultivo(areaCultivo.getCultivo().getDescripcion())
@@ -36,7 +40,7 @@ public class AreaCultivoResponseReport implements Serializable {
                 .prodCultivosPermanente(areaCultivo.getProdCultivosPermanente())
                 .prodCultivosTemporales(areaCultivo.getProdCultivosTemporales())
                 .produccionReal(areaCultivo.getProduccionReal())
-                .agroquimicos(areaCultivo.getAgroquimicos().stream().map(Agroquimico::getNombre).collect(Collectors.toList()))
+                .agroquimicos(agros)
                 .build();
     }
 

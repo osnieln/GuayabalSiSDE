@@ -23,6 +23,10 @@ public class AgroquimicoResponse {
 
     private String nombre;
 
+    private Double stockActual;
+
+    private Double stockMinimo;
+
     private List<AreaCultivoResponsePK> areaCultivoResponsePKListList;
 
     public static AgroquimicoResponse map(Agroquimico agroquimico) {
@@ -36,6 +40,8 @@ public class AgroquimicoResponse {
         return AgroquimicoResponse.builder()
                 .id(agroquimico.getId())
                 .nombre(agroquimico.getNombre())
+                .stockActual(agroquimico.getStockActual())
+                .stockMinimo(agroquimico.getStockMinimo())
                 .areaCultivoResponsePKListList(areaCultivoResponsePKList)
                 .build();
     }
@@ -54,6 +60,8 @@ public class AgroquimicoResponse {
                 .id(agroquimicoResponse.getId())
                 .areaCultivos(areaCultivoList)
                 .nombre(agroquimicoResponse.getNombre())
+                .stockActual(agroquimicoResponse.getStockActual())
+                .stockMinimo(agroquimicoResponse.getStockMinimo())
                 .build();
 
     }

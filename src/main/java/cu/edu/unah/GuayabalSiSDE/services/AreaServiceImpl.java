@@ -24,6 +24,11 @@ public class AreaServiceImpl implements AreaService{
     }
 
     @Override
+    public long count() {
+        return areaRepository.count();
+    }
+
+    @Override
     public Area findByID(Long id) {
         return areaRepository.findById(id).orElse(null);
     }
@@ -57,5 +62,10 @@ public class AreaServiceImpl implements AreaService{
     @Override
     public List<String> findDistinctCapa() {
         return areaRepository.findDistinctCapa();
+    }
+
+    @Override
+    public List<Area> findByCapa(String capa) {
+        return areaRepository.findByCapa(capa);
     }
 }

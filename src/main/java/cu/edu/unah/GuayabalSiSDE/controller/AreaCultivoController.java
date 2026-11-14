@@ -1,6 +1,7 @@
 package cu.edu.unah.GuayabalSiSDE.controller;
 
 import cu.edu.unah.GuayabalSiSDE.entity.*;
+import cu.edu.unah.GuayabalSiSDE.reportes.ExcelExportService;
 import cu.edu.unah.GuayabalSiSDE.services.AgroquimicoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaCultivoService;
 import cu.edu.unah.GuayabalSiSDE.services.AreaService;
@@ -11,11 +12,15 @@ import cu.edu.unah.GuayabalSiSDE.util.AreaCultivoResponseReport;
 import cu.edu.unah.GuayabalSiSDE.util.DateFormatter;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.BusinessValidationException;
 import cu.edu.unah.GuayabalSiSDE.util.ExceptionControl.ErrorCodes;
+import cu.edu.unah.GuayabalSiSDE.util.RendimientoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,6 +45,9 @@ public class AreaCultivoController {
     @Autowired
     @Lazy
     AgroquimicoService agroquimicoService;
+
+    @Autowired
+    private ExcelExportService excelExportService;
 
     @GetMapping
     ResponseEntity<List<AreaCultivoResponse>> findAll(){
@@ -153,5 +161,79 @@ public class AreaCultivoController {
             areaCultivoResponseList.add(AreaCultivoResponseReport.map(areaCultivo));
         });
         return ResponseEntity.ok(areaCultivoResponseList);
+    }
+
+    @GetMapping(path = "/calendario/{desde}/{hasta}")
+    public ResponseEntity<List<AreaCultivoResponse>> getCalendario(
+            @PathVariable String desde,
+            @PathVariable String hasta) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Date datDesde;
+        Date datHasta;
+        try {
+            datDesde = new Date(formatter.parse(desde).getTime());
+            datHasta = new Date(formatter.parse(hasta).getTime());
+        } catch (ParseException e) {
+            throw new BusinessValidationException(ErrorCodes.INVALID_DATE_FORMAT,
+                    "El formato de fecha no es válido. Use dd-MM-yyyy.");
+        }
+        List<AreaCultivo> list = areaCultivoService.findByFechaRecogidaBetween(datDesde, datHasta);
+        List<AreaCultivoResponse> result = new ArrayList<>();
+        list.forEach(ac -> result.add(AreaCultivoResponse.map(ac)));
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping(path = "/findByActivo/{activo}")
+    public ResponseEntity<List<AreaCultivoResponse>> findByActivo(@PathVariable boolean activo){
+        List<AreaCultivo> list = areaCultivoService.findByActivo(activo);
+        List<AreaCultivoResponse> result = new ArrayList<>();
+        list.forEach(ac -> result.add(AreaCultivoResponse.map(ac)));
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping(path = "/rendimiento")
+    public ResponseEntity<List<RendimientoResponse>> calcularRendimiento(){
+        return ResponseEntity.ok(areaCultivoService.calcularRendimiento());
+    }
+
+    @GetMapping(path = "/excel/calendario/{desde}/{hasta}")
+    public ResponseEntity<byte[]> excelCalendario(
+            @PathVariable String desde, @PathVariable String hasta) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            Date datDesde = new Date(formatter.parse(desde).getTime());
+            Date datHasta = new Date(formatter.parse(hasta).getTime());
+            List<AreaCultivo> list = areaCultivoService.findByFechaRecogidaBetween(datDesde, datHasta);
+            byte[] bytes = excelExportService.generarExcelCalendarioCosecha(list);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+            headers.setContentDispositionFormData("attachment", "planificacion_cosecha.xlsx");
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+            return ResponseEntity.ok().headers(headers).body(bytes);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping(path = "/export/csv")
+    public ResponseEntity<byte[]> exportCsv(){
+        List<AreaCultivo> list = areaCultivoService.findAll();
+        StringBuilder sb = new StringBuilder();
+        sb.append("AreaId,CultivoId,FechaSiembra,FechaRecogida,PlanProd,ProduccionReal,Activo\n");
+        for (AreaCultivo ac : list) {
+            sb.append(ac.getAreaCultivoPk().getAreaId()).append(",")
+              .append(ac.getAreaCultivoPk().getCultivoId()).append(",")
+              .append(DateFormatter.format(ac.getAreaCultivoPk().getFechaSiembra())).append(",")
+              .append(DateFormatter.format(ac.getFechaRecogida())).append(",")
+              .append(ac.getPlanProd() != null ? ac.getPlanProd() : "").append(",")
+              .append(ac.getProduccionReal() != null ? ac.getProduccionReal() : "").append(",")
+              .append(ac.isActivo()).append("\n");
+        }
+        byte[] bytes = sb.toString().getBytes(StandardCharsets.UTF_8);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("text/csv"));
+        headers.setContentDispositionFormData("attachment", "area_cultivos.csv");
+        return ResponseEntity.ok().headers(headers).body(bytes);
     }
 }
